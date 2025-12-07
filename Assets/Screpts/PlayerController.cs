@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;   // ← これが必須！
+using System.Collections;
 
 
 public class PlayerController : MonoBehaviour
@@ -36,14 +36,17 @@ public class PlayerController : MonoBehaviour
     private bool isInvincible = false;
     private SpriteRenderer spriteRenderer;
 
-    Rigidbody2D RB2D;
-
     private bool isGrounded;
     // 二段ジャンプ
     private bool canDoubleJump = false;
 
+
+    Animator animator;
+    Rigidbody2D RB2D;
+
     void Start()
     {
+        animator = GetComponent<Animator>();
         RB2D = GetComponent<Rigidbody2D>();
 
         currentHP = maxHP;
@@ -74,14 +77,25 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerMove()
     {
+        float move = 0f;
+
         if (Input.GetKey(KeyCode.D))
         {
             transform.Translate(MoveRight, 0f, 0);
+            move = Mathf.Abs(MoveRight);
         }
-        if (Input.GetKey(KeyCode.A))
+        else if (Input.GetKey(KeyCode.A))
         {
             transform.Translate(MoveLeft, 0f, 0);
+            move = Mathf.Abs(MoveLeft);
         }
+        else
+        {
+            move = 0f;
+        }
+
+        bool isWalking = (move > 0f) && isGrounded;
+        animator.SetBool("Walk", isWalking);
     }
     private void PlayerJump()
     {
@@ -89,6 +103,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+            animator.SetBool("Jump", true);  // ← ジャンプ開始時に1回だけtrue
             canDoubleJump = true;  // 空中でもう1回OK
             return;
         }
@@ -99,6 +114,8 @@ public class PlayerController : MonoBehaviour
             // 一度速度をリセットすると綺麗な二段ジャンプになる
             RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, 0f);
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+
+            animator.SetBool("Jump", true);  // ← ジャンプ開始時に1回だけtrue
 
             canDoubleJump = false;  // もう二段ジャンプ不可
         }
@@ -113,6 +130,7 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             canDoubleJump = true;
+            animator.SetBool("Jump", false); // ← 着地した瞬間だけ false
         }
     }
 
