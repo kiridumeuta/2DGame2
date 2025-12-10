@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
-            animator.SetBool("Jump", true);  // ← ジャンプ開始時に1回だけtrue
+            animator.SetTrigger("JumpStart"); // ← Trigger に変更！
             canDoubleJump = true;  // 空中でもう1回OK
             return;
         }
@@ -115,7 +115,8 @@ public class PlayerController : MonoBehaviour
             RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, 0f);
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
 
-            animator.SetBool("Jump", true);  // ← ジャンプ開始時に1回だけtrue
+            //animator.SetBool("Jump", true);  // ← ジャンプ開始時に1回だけtrue
+            animator.SetTrigger("DoubleJump"); // ← Trigger！
 
             canDoubleJump = false;  // もう二段ジャンプ不可
         }
@@ -123,15 +124,28 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGround()
     {
-        // 足元に地面（Layer） があるか？
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        //// 足元に地面（Layer） があるか？
+        //isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        // 地上に戻ったら二段ジャンプリセット
-        if (isGrounded)
+        //// 地上に戻ったら二段ジャンプリセット
+        //if (isGrounded)
+        //{
+        //    canDoubleJump = true;
+        //    animator.SetBool("Jump", false); // ← 着地した瞬間だけ false
+        //}
+
+        bool groundedNow = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        // ★ Animator へ地上/空中の状態を送る
+        animator.SetBool("IsGround", groundedNow);
+
+        // 二段ジャンプのリセット
+        if (groundedNow)
         {
             canDoubleJump = true;
-            animator.SetBool("Jump", false); // ← 着地した瞬間だけ false
         }
+
+        isGrounded = groundedNow;
     }
 
     // ライフを減らす処理
