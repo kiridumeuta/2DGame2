@@ -1290,8 +1290,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed079882d0d1568488ec7d92ae51b8b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  MoveRight: 0.005
-  MoveLeft: -0.005
+  MoveRight: 0.01
+  MoveLeft: -0.01
   JumpForce: 12
   BoundJump: 8
   SuperBoundJump: 16
@@ -1307,6 +1307,7 @@ MonoBehaviour:
   - {fileID: 1925095700}
   - {fileID: 932982837}
   invincibleTime: 2
+  coyoteTime: 0.1
 --- !u!95 &1592011115
 Animator:
   serializedVersion: 7

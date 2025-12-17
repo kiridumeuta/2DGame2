@@ -40,6 +40,9 @@ public class PlayerController : MonoBehaviour
     // 二段ジャンプ
     private bool canDoubleJump = false;
 
+    [SerializeField, Header("少し前に地面にいた場合のジャンプ許可")] private float coyoteTime = 0.1f;
+    private float coyoteCounter;
+
 
     Animator animator;
     Rigidbody2D RB2D;
@@ -99,6 +102,7 @@ public class PlayerController : MonoBehaviour
     }
     private void PlayerJump()
     {
+
         // 1段目ジャンプ（地上）
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
@@ -146,6 +150,7 @@ public class PlayerController : MonoBehaviour
         }
 
         isGrounded = groundedNow;
+
     }
 
     // ライフを減らす処理
