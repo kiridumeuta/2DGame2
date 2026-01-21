@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerHP : MonoBehaviour
@@ -16,6 +17,9 @@ public class PlayerHP : MonoBehaviour
     private bool isInvincible = false;
 
     private SpriteRenderer spriteRenderer;
+
+    [Header("ゲームオーバーマネージャー")]
+    [SerializeField] private GameOverManager gameOverManager; // Inspectorでセット
 
     void Start()
     {
@@ -54,6 +58,40 @@ public class PlayerHP : MonoBehaviour
     {
         Debug.Log("プレイヤー死亡");
         // ゲームオーバー処理など
+        // 1. プレイヤーを非表示にする
+        gameObject.SetActive(false);
+
+        // 2. 操作を無効化する場合は PlayerController を無効化
+        GetComponent<PlayerController>().enabled = false;
+        GetComponent<SpriteRenderer>().enabled = false;
+
+        // GameOverManager に通知
+        if (gameOverManager != null)
+        {
+            gameOverManager.TriggerGameOver();
+        }
+    }
+
+    private IEnumerator FadeOutAndGameOver()
+    {
+        // FadePanel を取得
+        GameObject fadePanel = GameObject.Find("FadePanel");
+        CanvasGroup cg = fadePanel.GetComponent<CanvasGroup>();
+
+        float duration = 3f; // 3秒で暗転
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            cg.alpha = Mathf.Lerp(0, 1, timer / duration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        cg.alpha = 1f;
+
+        // ゲームオーバーシーンへ遷移
+        SceneManager.LoadScene("GameOverScene"); // ← シーン名に合わせて変更
     }
 
     private IEnumerator InvincibleCoroutine()
