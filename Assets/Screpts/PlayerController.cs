@@ -27,21 +27,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("判定半径")]
     private float groundCheckRadius = 0.2f;
 
-    [SerializeField, Header("ライフ管理")] private int maxHP = 3;     // 最大ライフ数
-    private int currentHP;                      // 現在のライフ
-    [SerializeField] private GameObject[] hearts;   // シーンに配置した 3つのハート
-
-    [SerializeField, Header("無敵時間")]
-    private float invincibleTime = 1.5f;
-    private bool isInvincible = false;
     private SpriteRenderer spriteRenderer;
 
     private bool isGrounded;
     // 二段ジャンプ
     private bool canDoubleJump = false;
 
-    [SerializeField, Header("少し前に地面にいた場合のジャンプ許可")] private float coyoteTime = 0.1f;
-    private float coyoteCounter;
+    /*[SerializeField, Header("少し前に地面にいた場合のジャンプ許可")] private float coyoteTime = 0.1f;
+    private float coyoteCounter;*/
+
+    private PlayerHP playerHP;
 
 
     Animator animator;
@@ -52,10 +47,9 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         RB2D = GetComponent<Rigidbody2D>();
 
-        currentHP = maxHP;
-        UpdateHearts();
-
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        playerHP = GetComponent<PlayerHP>();
     }
 
     void Update()
@@ -86,11 +80,17 @@ public class PlayerController : MonoBehaviour
         {
             transform.Translate(MoveRight, 0f, 0);
             move = Mathf.Abs(MoveRight);
+
+            // ★右向き（反転しない）
+            spriteRenderer.flipX = false;
         }
         else if (Input.GetKey(KeyCode.A))
         {
             transform.Translate(MoveLeft, 0f, 0);
             move = Mathf.Abs(MoveLeft);
+
+            // ★左向き（反転）
+            spriteRenderer.flipX = true;
         }
         else
         {
@@ -107,7 +107,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+
             animator.SetTrigger("JumpStart"); // ← Trigger に変更！
+
             canDoubleJump = true;  // 空中でもう1回OK
             return;
         }
@@ -119,7 +121,6 @@ public class PlayerController : MonoBehaviour
             RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, 0f);
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
 
-            //animator.SetBool("Jump", true);  // ← ジャンプ開始時に1回だけtrue
             animator.SetTrigger("DoubleJump"); // ← Trigger！
 
             canDoubleJump = false;  // もう二段ジャンプ不可
@@ -128,17 +129,29 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGround()
     {
-        //// 足元に地面（Layer） があるか？
-        //isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        /* 足元に地面（Layer） があるか？
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        //// 地上に戻ったら二段ジャンプリセット
-        //if (isGrounded)
-        //{
-        //    canDoubleJump = true;
-        //    animator.SetBool("Jump", false); // ← 着地した瞬間だけ false
-        //}
+         地上に戻ったら二段ジャンプリセット
+        if (isGrounded)
+        {
+            canDoubleJump = true;
+            animator.SetBool("Jump", false); // ← 着地した瞬間だけ false
+        }*/
 
-        bool groundedNow = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        bool groundedNow = Physics2D.OverlapCircle(
+        groundCheck.position,
+        groundCheckRadius,
+        groundLayer
+    );
+
+        // 上昇中なら必ず空中扱い
+        if (RB2D.linearVelocityY > 0.05f)
+        {
+            groundedNow = false;
+        }
+
+        //bool groundedNow = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
         // ★ Animator へ地上/空中の状態を送る
         animator.SetBool("IsGround", groundedNow);
@@ -153,39 +166,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    // ライフを減らす処理
-    public void TakeDamage(int damage)
-    {
-        if (isInvincible) return;   // ←無敵中なら何もせず終了！
 
-        currentHP -= damage;
-        if (currentHP < 0) currentHP = 0;
-
-        UpdateHearts();
-
-        // 無敵化開始
-        StartCoroutine(InvincibleCoroutine());
-
-        if (currentHP == 0)
-        {
-            Die();
-        }
-    }
-
-    // ハート表示を更新
-    private void UpdateHearts()
-    {
-        for (int i = 0; i < hearts.Length; i++)
-        {
-            hearts[i].SetActive(i < currentHP);
-        }
-    }
-
-    private void Die()
-    {
-        Debug.Log("プレイヤー死亡");
-        // リスポーン処理やゲームオーバーなどを書く
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -209,7 +190,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 Debug.Log("敵に当たりました");
-                TakeDamage(1); // ライフを減らす
+                playerHP.TakeDamage(30); // ライフを減らす
             }
         }
     }
@@ -251,26 +232,5 @@ public class PlayerController : MonoBehaviour
         RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, SuperBoundJump);
     }
 
-    private IEnumerator InvincibleCoroutine()
-    {
-        isInvincible = true;
 
-        float timer = 0f;
-
-        while (timer < invincibleTime)
-        {
-            // 透明・表示を切り替える（点滅）
-            spriteRenderer.enabled = !spriteRenderer.enabled;
-
-            // 点滅速度
-            yield return new WaitForSeconds(0.1f);
-
-            timer += 0.1f;
-        }
-
-        // 最後に表示を ON に戻す
-        spriteRenderer.enabled = true;
-
-        isInvincible = false;
-    }
 }
