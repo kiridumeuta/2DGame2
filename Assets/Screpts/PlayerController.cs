@@ -4,6 +4,8 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private GameOverManager gameOverManager;  // GameOverManagerをインスペクターから参照
+
     [SerializeField, Header("移動速度(右)")]
     private float MoveRight = 0.01f;
     [SerializeField, Header("移動速度(左)")]
@@ -46,10 +48,13 @@ public class PlayerController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         RB2D = GetComponent<Rigidbody2D>();
-
         spriteRenderer = GetComponent<SpriteRenderer>();
-
         playerHP = GetComponent<PlayerHP>();
+        // シーン内の GameOverManager を探す
+        if (gameOverManager == null)
+        {
+            Debug.LogError("GameOverManagerが設定されていません。インスペクターで設定してください。");
+        }
     }
 
     void Update()
@@ -129,16 +134,6 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGround()
     {
-        /* 足元に地面（Layer） があるか？
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-
-         地上に戻ったら二段ジャンプリセット
-        if (isGrounded)
-        {
-            canDoubleJump = true;
-            animator.SetBool("Jump", false); // ← 着地した瞬間だけ false
-        }*/
-
         bool groundedNow = Physics2D.OverlapCircle(
         groundCheck.position,
         groundCheckRadius,
@@ -193,38 +188,20 @@ public class PlayerController : MonoBehaviour
                 playerHP.TakeDamage(30); // ライフを減らす
             }
         }
-    }
-
-    //元の処理
-    /*private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Enemyタグの相手に当たったか？
-        if (collision.collider.CompareTag("Enemy"))
+        // 奈落判定
+        if (collision.CompareTag("Fall"))
         {
-            if (isInvincible) return;   // ←無敵なら処理しない
-
-            // プレイヤーの足が敵の上側より上にあるかを判定
-            if (groundCheck.position.y > collision.collider.transform.position.y)
+            if (gameOverManager != null)
             {
-                // 敵オブジェクトを消す
-                Destroy(collision.collider.gameObject);
-                // 反動で跳ね返る
-                RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, BoundJump);
+                // GameOverManager に処理を任せる
+                gameOverManager.TriggerGameOver();
 
-                // 強ジャンプ受付を開始
-                jumpBufferCounter = jumpBufferTime;
-
-                // 踏んだ場合は空中扱いなので二段ジャンプは1回にしておく
-                //   こうすると踏んだ後にも空中ジャンプ（実質二段目）が可能
-                canDoubleJump = true;
-            }
-            else
-            {
-                Debug.Log("敵に当たりました");
-                TakeDamage(1);   // ライフを1つ減らす
+                // 操作を止める
+                RB2D.linearVelocity = Vector2.zero;
+                RB2D.simulated = false;
             }
         }
-    }*/
+    }
 
     //強ジャンプ処理
     private void StrongBoundJump()
