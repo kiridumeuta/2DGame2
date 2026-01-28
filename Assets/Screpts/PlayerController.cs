@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -40,6 +41,8 @@ public class PlayerController : MonoBehaviour
     // 二段ジャンプ
     private bool canDoubleJump = false;
 
+    private bool hasBouncedThisFrame = false;
+
     /*[SerializeField, Header("少し前に地面にいた場合のジャンプ許可")] private float coyoteTime = 0.1f;
     private float coyoteCounter;*/
 
@@ -66,6 +69,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // 毎フレームリセット
+        hasBouncedThisFrame = false;
+
         moveInput = 0f;
 
         if (Input.GetKey(KeyCode.D)) moveInput = 1f;
@@ -195,7 +201,7 @@ public class PlayerController : MonoBehaviour
         if (collision.CompareTag("Enemy"))
         {
             // プレイヤーの足が敵の上より上かを判定
-            if (RB2D.linearVelocity.y <= 0f && groundCheck.position.y > collision.transform.position.y)
+            if (!hasBouncedThisFrame && RB2D.linearVelocity.y <= 0f && groundCheck.position.y > collision.transform.position.y)
             {
                 // 敵を消す
                 Destroy(collision.gameObject);
@@ -208,8 +214,10 @@ public class PlayerController : MonoBehaviour
 
                 // 空中ジャンプリセット
                 canDoubleJump = true;
+
+                hasBouncedThisFrame = true; // このフレームではもうダメージを受けない
             }
-            else
+            else if (!hasBouncedThisFrame)
             {
                 Debug.Log("敵に当たりました");
                 playerHP.TakeDamage(30); // ライフを減らす

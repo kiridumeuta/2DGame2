@@ -5,9 +5,13 @@ public class Enemy1 : MonoBehaviour
     [SerializeField, Header("移動速度")]
     private float moveSpeed = 2f;
     [SerializeField, Header("カメラ外で消滅(X)")]
-    private float DestroyEnemyWidth = 2f;
+    private float DestroyEnemyWidth = -0.3f;
+    [SerializeField, Header("カメラ外で消滅(-X)")]
+    private float DestroyEnemyWidth2 = 1.3f;
     [SerializeField, Header("カメラ外で消滅(Y)")]
-    private float DestroyEnemyHight = 2f;
+    private float DestroyEnemyHight = -0.3f;
+    [SerializeField, Header("カメラ外で消滅(-Y)")]
+    private float DestroyEnemyHight2 = 1.3f;
 
     Rigidbody2D rb;
     SpriteRenderer sr;
@@ -18,7 +22,13 @@ public class Enemy1 : MonoBehaviour
     // ← 追加：移動方向（-1 = 左、1 = 右）
     int moveDir = -1;
 
+    private bool isActive = true; // 表示・動作中かどうか
+
     private Camera mainCamera;
+
+    // 敵が破壊されたときに通知
+    public delegate void EnemyDestroyed(Enemy1 enemy);
+    public event EnemyDestroyed OnDestroyed;
 
     void Start()
     {
@@ -34,6 +44,8 @@ public class Enemy1 : MonoBehaviour
     void Update()
     {
         CheckOutOfCamera();
+
+        if (!isActive) return; // 非アクティブなら動作停止
     }
 
     void FixedUpdate()
@@ -48,11 +60,49 @@ public class Enemy1 : MonoBehaviour
         // カメラのビューポート座標に変換（0~1の範囲）
         Vector3 viewPos = mainCamera.WorldToViewportPoint(transform.position);
 
-        // 画面外なら削除
-        if (viewPos.x < -0.3f || viewPos.x > 1.3f || viewPos.y < -0.3f || viewPos.y > 1.3f)
+        // 画面内ならアクティブに戻す
+        /*if (viewPos.x >= DestroyEnemyWidth && viewPos.x <= DestroyEnemyWidth2 &&
+            viewPos.y >= DestroyEnemyHight && viewPos.y <= DestroyEnemyHight2)
         {
-            Destroy(gameObject);
+            if (!isActive)
+            {
+                isActive = true;
+                SetActiveState(true);
+            }
         }
+        else // 画面外なら非アクティブ
+        {
+            if (isActive)
+            {
+                isActive = false;
+                SetActiveState(false);
+            }
+
+        }*/
+        // ビューポート外なら削除
+        if (viewPos.x < -0.1f || viewPos.x > 1.1f || viewPos.y < -0.1f || viewPos.y > 1.1f)
+        {
+            DestroyEnemy();
+        }
+    }
+
+    void SetActiveState(bool state)
+    {
+        // レンダラーの表示・非表示
+        sr.enabled = state;
+
+        // Rigidbody2Dの動きを止める
+        rb.simulated = state;
+
+        // 必要ならコライダーも無効化
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = state;
+    }
+
+    public void DestroyEnemy()
+    {
+        OnDestroyed?.Invoke(this); // スポナーに通知
+        Destroy(gameObject);       // 自分を破壊
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
