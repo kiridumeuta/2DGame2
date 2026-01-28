@@ -81,7 +81,8 @@ public class Enemy1 : MonoBehaviour
 
         }*/
         // ビューポート外なら削除
-        if (viewPos.x < -0.1f || viewPos.x > 1.1f || viewPos.y < -0.1f || viewPos.y > 1.1f)
+        if (viewPos.x < DestroyEnemyWidth || viewPos.x > DestroyEnemyWidth2 ||
+            viewPos.y < DestroyEnemyHight || viewPos.y > DestroyEnemyHight2)
         {
             DestroyEnemy();
         }
