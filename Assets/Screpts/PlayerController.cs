@@ -1,15 +1,14 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameOverManager gameOverManager;  // GameOverManagerをインスペクターから参照
 
-    [SerializeField, Header("移動速度(右)")]
-    private float MoveRight = 0.01f;
-    [SerializeField, Header("移動速度(左)")]
-    private float MoveLeft = -0.01f;
+    [SerializeField, Header("移動速度")]
+    private float moveSpeed = 5f;
 
     [SerializeField, Header("ジャンプ力")]
     private float JumpForce = 14f;
@@ -29,6 +28,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("判定半径")]
     private float groundCheckRadius = 0.2f;
 
+    /*[SerializeField, Header("壁判定距離")]
+    private float wallCheckDistance = 0.1f;
+    [SerializeField]
+    private LayerMask wallLayer;
+    private bool isTouchingWall;*/
+
     private SpriteRenderer spriteRenderer;
 
     private bool isGrounded;
@@ -37,6 +42,8 @@ public class PlayerController : MonoBehaviour
 
     /*[SerializeField, Header("少し前に地面にいた場合のジャンプ許可")] private float coyoteTime = 0.1f;
     private float coyoteCounter;*/
+
+    float moveInput;
 
     private PlayerHP playerHP;
 
@@ -59,8 +66,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        moveInput = 0f;
+
+        if (Input.GetKey(KeyCode.D)) moveInput = 1f;
+        if (Input.GetKey(KeyCode.A)) moveInput = -1f;
+
         CheckGround();
-        PlayerMove();
+        /*CheckWall();*/
         PlayerJump();
 
         // 踏んだ後の受付時間を減らす
@@ -77,32 +89,33 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        PlayerMove();
+    }
+
     private void PlayerMove()
     {
-        float move = 0f;
+        /*float targetX = moveInput * moveSpeed;
 
-        if (Input.GetKey(KeyCode.D))
+        if (!isGrounded && isTouchingWall)
         {
-            transform.Translate(MoveRight, 0f, 0);
-            move = Mathf.Abs(MoveRight);
+            targetX = 0f; // 空中で壁に張り付かない
+        }*/
 
-            // ★右向き（反転しない）
+        RB2D.linearVelocity = new Vector2(moveInput * moveSpeed, RB2D.linearVelocity.y);
+
+        // 向き
+        if (moveInput > 0)
+        {
             spriteRenderer.flipX = false;
         }
-        else if (Input.GetKey(KeyCode.A))
+        if (moveInput < 0)
         {
-            transform.Translate(MoveLeft, 0f, 0);
-            move = Mathf.Abs(MoveLeft);
-
-            // ★左向き（反転）
             spriteRenderer.flipX = true;
         }
-        else
-        {
-            move = 0f;
-        }
 
-        bool isWalking = (move > 0f) && isGrounded;
+        bool isWalking = (Mathf.Abs(moveInput) > 0f) && isGrounded;
         animator.SetBool("Walk", isWalking);
     }
     private void PlayerJump()
@@ -134,11 +147,7 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGround()
     {
-        bool groundedNow = Physics2D.OverlapCircle(
-        groundCheck.position,
-        groundCheckRadius,
-        groundLayer
-    );
+        bool groundedNow = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
         // 上昇中なら必ず空中扱い
         if (RB2D.linearVelocityY > 0.05f)
@@ -161,6 +170,24 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    /*void CheckWall()
+    {
+        Vector2 dir = spriteRenderer.flipX ? Vector2.left : Vector2.right;
+        float halfHeight = GetComponent<Collider2D>().bounds.extents.y;
+
+        Vector2 posTop = new Vector2(transform.position.x, transform.position.y + halfHeight);
+        Vector2 posMid = transform.position;
+        Vector2 posBottom = new Vector2(transform.position.x, transform.position.y - halfHeight);
+
+        isTouchingWall = Physics2D.Raycast(posTop, dir, wallCheckDistance, wallLayer)
+                      || Physics2D.Raycast(posMid, dir, wallCheckDistance, wallLayer)
+                      || Physics2D.Raycast(posBottom, dir, wallCheckDistance, wallLayer);
+
+        // デバッグ用にRayを可視化
+        Debug.DrawRay(posTop, dir * wallCheckDistance, Color.red);
+        Debug.DrawRay(posMid, dir * wallCheckDistance, Color.green);
+        Debug.DrawRay(posBottom, dir * wallCheckDistance, Color.blue);
+    }*/
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -168,7 +195,7 @@ public class PlayerController : MonoBehaviour
         if (collision.CompareTag("Enemy"))
         {
             // プレイヤーの足が敵の上より上かを判定
-            if (groundCheck.position.y > collision.transform.position.y)
+            if (RB2D.linearVelocity.y <= 0f && groundCheck.position.y > collision.transform.position.y)
             {
                 // 敵を消す
                 Destroy(collision.gameObject);
