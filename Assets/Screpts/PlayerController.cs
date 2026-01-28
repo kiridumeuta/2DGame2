@@ -215,6 +215,13 @@ public class PlayerController : MonoBehaviour
                 // 空中ジャンプリセット
                 canDoubleJump = true;
 
+                // 敵を消す処理 ←ここを DestroyEnemy() に置き換える
+                Enemy1 enemy = collision.GetComponent<Enemy1>();
+                if (enemy != null)
+                {
+                    enemy.DestroyEnemy(); // ← スポナーに通知される
+                }
+
                 hasBouncedThisFrame = true; // このフレームではもうダメージを受けない
             }
             else if (!hasBouncedThisFrame)

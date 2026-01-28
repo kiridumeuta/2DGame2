@@ -37,13 +37,14 @@ public class EnemySpawner : MonoBehaviour
         Vector3 spawnPos = transform.position;
         // X座標をランダムにずらす場合
         spawnPos.x += Random.Range(-spawnRangeX, spawnRangeX);
-        GameObject enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+        GameObject enemyObj = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
 
         // 敵が消えたときにカウントを減らす
-        Enemy1 enemyScript = enemy.GetComponent<Enemy1>();
-        if (enemyScript != null)
+        Enemy1 enemy = enemyObj.GetComponent<Enemy1>();
+        if (enemy != null)
         {
-            enemyScript.OnDestroyed += OnEnemyDestroyed;
+            // インスタンスのイベントに登録
+            enemy.OnDestroyed += HandleEnemyDestroyed;
         }
 
         currentEnemies++;
@@ -59,5 +60,10 @@ public class EnemySpawner : MonoBehaviour
         // Scene上でスポーン範囲を可視化
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position + Vector3.left * spawnRangeX, transform.position + Vector3.right * spawnRangeX);
+    }
+
+    private void HandleEnemyDestroyed(Enemy1 enemy)
+    {
+        currentEnemies--;
     }
 }

@@ -1270,6 +1270,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 6404045511540221453, guid: 05d33f78ebed19346a3e5d4d57c80351, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404045511540221453, guid: 05d33f78ebed19346a3e5d4d57c80351, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404045511540221453, guid: 05d33f78ebed19346a3e5d4d57c80351, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404045511540221453, guid: 05d33f78ebed19346a3e5d4d57c80351, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7561565667744093598, guid: 05d33f78ebed19346a3e5d4d57c80351, type: 3}
       propertyPath: m_LocalPosition.x
       value: 45.752808

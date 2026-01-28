@@ -28,7 +28,8 @@ public class Enemy1 : MonoBehaviour
 
     // “G‚ª”j‰ó‚³‚ê‚½‚Æ‚«‚É’Ê’m
     public delegate void EnemyDestroyed(Enemy1 enemy);
-    public event EnemyDestroyed OnDestroyed;
+    public event System.Action<Enemy1> OnDestroyed;
+
 
     void Start()
     {
