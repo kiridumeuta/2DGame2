@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
         {
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
 
-            animator.SetTrigger("JumpStart"); // ← Trigger に変更！
+            animator.SetTrigger("JumpStart"); // ← Trigger に変更
 
             canDoubleJump = true;  // 空中でもう1回OK
             return;
@@ -145,7 +145,7 @@ public class PlayerController : MonoBehaviour
             RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, 0f);
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
 
-            animator.SetTrigger("DoubleJump"); // ← Trigger！
+            animator.SetTrigger("DoubleJump"); // ← Trigger
 
             canDoubleJump = false;  // もう二段ジャンプ不可
         }
