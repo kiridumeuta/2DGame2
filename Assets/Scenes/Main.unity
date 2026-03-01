@@ -366,9 +366,9 @@ GameObject:
   - component: {fileID: 218700241}
   - component: {fileID: 218700240}
   - component: {fileID: 218700244}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: Wall
-  m_TagString: Wall
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1981,7 +1981,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1159586236
 RectTransform:
   m_ObjectHideFlags: 0
