@@ -53,12 +53,21 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     Rigidbody2D RB2D;
 
+    [Header("SE")]
+    [SerializeField] private AudioClip jumpSE;   // ジャンプした音
+    [SerializeField] private AudioClip doublejumpSE;  // 二段ジャンプした音
+    [SerializeField] private AudioClip stompSE;   // 敵を踏んだ音
+    [SerializeField] private AudioClip damageSE;  // ダメージ音
+
+    private AudioSource audioSource;
+
     void Start()
     {
         animator = GetComponent<Animator>();
         RB2D = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerHP = GetComponent<PlayerHP>();
+        audioSource = GetComponent<AudioSource>();
 
         defaultLayer = gameObject.layer;
         invincibleLayer = LayerMask.NameToLayer("PlayerInvincible");
@@ -125,6 +134,8 @@ public class PlayerController : MonoBehaviour
         // 1段目ジャンプ（地上）
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
+            audioSource.PlayOneShot(jumpSE);
+
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
 
             animator.SetTrigger("JumpStart"); // ← Trigger に変更
@@ -138,6 +149,9 @@ public class PlayerController : MonoBehaviour
         {
             // 一度速度をリセットすると綺麗な二段ジャンプになる
             RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, 0f);
+
+            audioSource.PlayOneShot(doublejumpSE);
+
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
 
             animator.SetTrigger("DoubleJump"); // ← Trigger
@@ -176,8 +190,7 @@ public class PlayerController : MonoBehaviour
             // プレイヤーが落下中かを判定
             if (!hasBouncedThisFrame && RB2D.linearVelocity.y < 0f)
             {
-                // 敵を消す
-                //Destroy(collision.gameObject);
+                audioSource.PlayOneShot(stompSE);
 
                 // 反動で跳ね返る
                 RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, BoundJump);
@@ -232,6 +245,8 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         if (isInvincible) return;
+
+        audioSource.PlayOneShot(damageSE);
 
         playerHP.TakeDamage(damage);
 
