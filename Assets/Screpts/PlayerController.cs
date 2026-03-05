@@ -37,8 +37,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("判定半径")]
     private float groundCheckRadius = 0.2f;
 
-    [SerializeField] private Collider2D footCollider;
-
     private SpriteRenderer spriteRenderer;
 
     private bool isGrounded;
@@ -192,9 +190,14 @@ public class PlayerController : MonoBehaviour
 
                 // 敵を消す処理 ←ここを DestroyEnemy() に置き換える
                 Enemy1 enemy = collision.GetComponent<Enemy1>();
+                EnemyJump enemyjump = collision.GetComponent<EnemyJump>();
                 if (enemy != null)
                 {
                     enemy.DestroyEnemy(); // ← スポナーに通知される
+                }
+                if (enemyjump != null)
+                {
+                    enemyjump.DestroyEnemy(); // ← スポナーに通知される
                 }
 
                 hasBouncedThisFrame = true; // このフレームではもうダメージを受けない
