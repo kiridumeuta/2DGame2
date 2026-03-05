@@ -49,8 +49,7 @@ public class EnemyJump : MonoBehaviour
     void FixedUpdate()
     {
         // ‰¡ˆÚ“®
-        Vector2 newPos = rb.position + Vector2.right * moveDir * moveSpeed * Time.fixedDeltaTime;
-        rb.MovePosition(newPos);
+        rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

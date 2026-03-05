@@ -11,18 +11,24 @@ public class PlayerHP : MonoBehaviour
 
     [Header("HPバー（Slider）")]
     [SerializeField] private Slider hpSlider;
-
+    /*
     [Header("無敵時間")]
     [SerializeField] private float invincibleTime = 1.5f;
-    private bool isInvincible = false;
+    private bool isInvincible = false;*/
 
     private SpriteRenderer spriteRenderer;
 
     [Header("ゲームオーバーマネージャー")]
     [SerializeField] private GameOverManager gameOverManager; // Inspectorでセット
 
+    /*int defaultLayer;
+    int invincibleLayer;*/
+
     void Start()
-    {
+    {/*
+        defaultLayer = gameObject.layer;
+        invincibleLayer = LayerMask.NameToLayer("PlayerInvincible");*/
+
         currentHP = maxHP;
         spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -35,8 +41,8 @@ public class PlayerHP : MonoBehaviour
 
     // 外部から呼ばれるダメージ処理
     public void TakeDamage(int damage)
-    {
-        if (isInvincible) return;
+    {/*
+        if (isInvincible) return;*/
 
         currentHP -= damage;
         if (currentHP < 0) currentHP = 0;
@@ -45,8 +51,8 @@ public class PlayerHP : MonoBehaviour
         {
             hpSlider.value = currentHP;
         }
-
-        StartCoroutine(InvincibleCoroutine());
+        /*
+        StartCoroutine(InvincibleCoroutine());*/
 
         if (currentHP <= 0)
         {
@@ -93,10 +99,13 @@ public class PlayerHP : MonoBehaviour
         // ゲームオーバーシーンへ遷移
         SceneManager.LoadScene("GameOverScene"); // ← シーン名に合わせて変更
     }
-
+    /*
     private IEnumerator InvincibleCoroutine()
     {
         isInvincible = true;
+
+        // レイヤー変更
+        gameObject.layer = invincibleLayer;
 
         float timer = 0f;
         while (timer < invincibleTime)
@@ -107,6 +116,10 @@ public class PlayerHP : MonoBehaviour
         }
 
         spriteRenderer.enabled = true;
+
+        // レイヤー戻す
+        gameObject.layer = defaultLayer;
+
         isInvincible = false;
-    }
+    }*/
 }

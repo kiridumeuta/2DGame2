@@ -65,25 +65,6 @@ public class Enemy1 : MonoBehaviour
         // カメラのビューポート座標に変換（0~1の範囲）
         Vector3 viewPos = mainCamera.WorldToViewportPoint(transform.position);
 
-        // 画面内ならアクティブに戻す
-        /*if (viewPos.x >= DestroyEnemyWidth && viewPos.x <= DestroyEnemyWidth2 &&
-            viewPos.y >= DestroyEnemyHight && viewPos.y <= DestroyEnemyHight2)
-        {
-            if (!isActive)
-            {
-                isActive = true;
-                SetActiveState(true);
-            }
-        }
-        else // 画面外なら非アクティブ
-        {
-            if (isActive)
-            {
-                isActive = false;
-                SetActiveState(false);
-            }
-
-        }*/
         // ビューポート外なら削除
         if (viewPos.x < DestroyEnemyWidth || viewPos.x > DestroyEnemyWidth2 ||
             viewPos.y < DestroyEnemyHight || viewPos.y > DestroyEnemyHight2)
@@ -112,14 +93,7 @@ public class Enemy1 : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
-    {/*
-        // 壁に当たったら反転
-        if (collision.gameObject.CompareTag("Wall") ||
-            collision.gameObject.CompareTag("Enemy"))
-        {
-            Reverse();
-        }*/
-
+    {
         if (collision.gameObject.CompareTag("Wall"))
         {
             // 衝突点の高さをチェック
@@ -141,21 +115,5 @@ public class Enemy1 : MonoBehaviour
 
         // めり込み防止（おまじない）
         rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            gameObject.layer = noPushLayer;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            gameObject.layer = defaultLayer;
-        }
     }
 }

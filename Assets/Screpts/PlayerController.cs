@@ -22,6 +22,14 @@ public class PlayerController : MonoBehaviour
     private float jumpBufferTime = 0.2f;
     private float jumpBufferCounter = 0f;   // ←内部カウンタ
 
+    [Header("無敵時間")]
+    [SerializeField] private float invincibleTime = 1.5f;
+
+    private bool isInvincible = false;
+
+    int defaultLayer;
+    int invincibleLayer;
+
     [SerializeField, Header("地面レイヤー")]
     private LayerMask groundLayer;
     [SerializeField, Header("地面判定の位置")]
@@ -29,11 +37,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("判定半径")]
     private float groundCheckRadius = 0.2f;
 
-    /*[SerializeField, Header("壁判定距離")]
-    private float wallCheckDistance = 0.1f;
-    [SerializeField]
-    private LayerMask wallLayer;
-    private bool isTouchingWall;*/
+    [SerializeField] private Collider2D footCollider;
 
     private SpriteRenderer spriteRenderer;
 
@@ -42,9 +46,6 @@ public class PlayerController : MonoBehaviour
     private bool canDoubleJump = false;
 
     private bool hasBouncedThisFrame = false;
-
-    /*[SerializeField, Header("少し前に地面にいた場合のジャンプ許可")] private float coyoteTime = 0.1f;
-    private float coyoteCounter;*/
 
     float moveInput;
 
@@ -60,6 +61,10 @@ public class PlayerController : MonoBehaviour
         RB2D = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerHP = GetComponent<PlayerHP>();
+
+        defaultLayer = gameObject.layer;
+        invincibleLayer = LayerMask.NameToLayer("PlayerInvincible");
+
         // シーン内の GameOverManager を探す
         if (gameOverManager == null)
         {
@@ -78,7 +83,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.A)) moveInput = -1f;
 
         CheckGround();
-        /*CheckWall();*/
         PlayerJump();
 
         // 踏んだ後の受付時間を減らす
@@ -102,13 +106,6 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerMove()
     {
-        /*float targetX = moveInput * moveSpeed;
-
-        if (!isGrounded && isTouchingWall)
-        {
-            targetX = 0f; // 空中で壁に張り付かない
-        }*/
-
         RB2D.linearVelocity = new Vector2(moveInput * moveSpeed, RB2D.linearVelocity.y);
 
         // 向き
@@ -161,8 +158,6 @@ public class PlayerController : MonoBehaviour
             groundedNow = false;
         }
 
-        //bool groundedNow = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-
         // ★ Animator へ地上/空中の状態を送る
         animator.SetBool("IsGround", groundedNow);
 
@@ -176,35 +171,15 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    /*void CheckWall()
-    {
-        Vector2 dir = spriteRenderer.flipX ? Vector2.left : Vector2.right;
-        float halfHeight = GetComponent<Collider2D>().bounds.extents.y;
-
-        Vector2 posTop = new Vector2(transform.position.x, transform.position.y + halfHeight);
-        Vector2 posMid = transform.position;
-        Vector2 posBottom = new Vector2(transform.position.x, transform.position.y - halfHeight);
-
-        isTouchingWall = Physics2D.Raycast(posTop, dir, wallCheckDistance, wallLayer)
-                      || Physics2D.Raycast(posMid, dir, wallCheckDistance, wallLayer)
-                      || Physics2D.Raycast(posBottom, dir, wallCheckDistance, wallLayer);
-
-        // デバッグ用にRayを可視化
-        Debug.DrawRay(posTop, dir * wallCheckDistance, Color.red);
-        Debug.DrawRay(posMid, dir * wallCheckDistance, Color.green);
-        Debug.DrawRay(posBottom, dir * wallCheckDistance, Color.blue);
-    }*/
-
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
-            // プレイヤーの足が敵の上より上かを判定
-            if (!hasBouncedThisFrame && RB2D.linearVelocity.y <= 0f && groundCheck.position.y > collision.transform.position.y)
+            // プレイヤーが落下中かを判定
+            if (!hasBouncedThisFrame && RB2D.linearVelocity.y < 0f)
             {
                 // 敵を消す
-                Destroy(collision.gameObject);
+                //Destroy(collision.gameObject);
 
                 // 反動で跳ね返る
                 RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, BoundJump);
@@ -227,7 +202,7 @@ public class PlayerController : MonoBehaviour
             else if (!hasBouncedThisFrame)
             {
                 Debug.Log("敵に当たりました");
-                playerHP.TakeDamage(30); // ライフを減らす
+                TakeDamage(30); // ライフを減らす
             }
         }
         // 奈落判定
@@ -251,5 +226,35 @@ public class PlayerController : MonoBehaviour
         RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, SuperBoundJump);
     }
 
+    public void TakeDamage(int damage)
+    {
+        if (isInvincible) return;
 
+        playerHP.TakeDamage(damage);
+
+        StartCoroutine(InvincibleCoroutine());
+    }
+
+    private IEnumerator InvincibleCoroutine()
+    {
+        isInvincible = true;
+
+        // レイヤー変更
+        gameObject.layer = invincibleLayer;
+
+        float timer = 0f;
+        while (timer < invincibleTime)
+        {
+            spriteRenderer.enabled = !spriteRenderer.enabled;
+            yield return new WaitForSeconds(0.1f);
+            timer += 0.1f;
+        }
+
+        spriteRenderer.enabled = true;
+
+        // レイヤー戻す
+        gameObject.layer = defaultLayer;
+
+        isInvincible = false;
+    }
 }
