@@ -51,7 +51,11 @@ public class Enemy1 : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
+        //rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
+        if (!isActive) return;
+
+        Vector2 newPos = rb.position + Vector2.right * moveDir * moveSpeed * Time.fixedDeltaTime;
+        rb.MovePosition(newPos);
     }
 
     void CheckOutOfCamera()
@@ -108,12 +112,25 @@ public class Enemy1 : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
-    {
+    {/*
         // 壁に当たったら反転
         if (collision.gameObject.CompareTag("Wall") ||
             collision.gameObject.CompareTag("Enemy"))
         {
             Reverse();
+        }*/
+
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            // 衝突点の高さをチェック
+            foreach (var contact in collision.contacts)
+            {
+                if (contact.normal.y < 0.1f) // 横からの衝突なら反転
+                {
+                    Reverse();
+                    break;
+                }
+            }
         }
     }
 
