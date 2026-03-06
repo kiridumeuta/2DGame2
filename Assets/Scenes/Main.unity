@@ -6361,7 +6361,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1159586236
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6931,6 +6931,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHP
   maxHP: 100
+  currentHP: 0
   hpSlider: {fileID: 1826346354}
   gameOverManager: {fileID: 2133246717}
 --- !u!61 &1592011117
@@ -7748,13 +7749,13 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 619394802}
+  - {fileID: 1994547464}
   - {fileID: 676887786}
   - {fileID: 1216464415}
   - {fileID: 1592011113}
   - {fileID: 6499967134912445876}
   - {fileID: 1653375916}
   - {fileID: 109521378}
-  - {fileID: 1994547464}
   - {fileID: 1042848986}
   - {fileID: 1669752519}
   - {fileID: 194171584}
