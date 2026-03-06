@@ -188,7 +188,7 @@ public class PlayerController : MonoBehaviour
         if (collision.CompareTag("Enemy"))
         {
             // プレイヤーが落下中かを判定
-            if (!hasBouncedThisFrame && RB2D.linearVelocity.y < 0f)
+            if (!hasBouncedThisFrame && RB2D.linearVelocity.y < -0.1f)
             {
                 audioSource.PlayOneShot(stompSE);
 
@@ -250,7 +250,10 @@ public class PlayerController : MonoBehaviour
 
         playerHP.TakeDamage(damage);
 
-        StartCoroutine(InvincibleCoroutine());
+        if (playerHP.currentHP > 0)
+        {
+            StartCoroutine(InvincibleCoroutine());
+        }
     }
 
     private IEnumerator InvincibleCoroutine()
