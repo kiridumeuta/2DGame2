@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
         // シーン内の GameOverManager を探す
         if (gameOverManager == null)
         {
-            Debug.LogError("GameOverManagerが設定されていません。インスペクターで設定してください。");
+            Debug.LogError("GameOverManagerが設定されていません");
         }
     }
 
