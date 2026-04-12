@@ -7,7 +7,7 @@ public class PlayerHP : MonoBehaviour
 {
     [Header("ライフ管理")]
     [SerializeField] private int maxHP = 100;
-    private int currentHP;
+    public int currentHP;
 
     [Header("HPバー（Slider）")]
     [SerializeField] private Slider hpSlider;
