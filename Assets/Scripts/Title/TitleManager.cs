@@ -6,7 +6,7 @@ public class TitleManager : MonoBehaviour
     // ゲーム開始
     public void StartGame()
     {
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene("StageSelectScene");
     }
 
     // ゲーム終了
