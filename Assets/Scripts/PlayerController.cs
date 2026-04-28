@@ -45,6 +45,9 @@ public class PlayerController : MonoBehaviour
 
     private bool hasBouncedThisFrame = false;
 
+    //落下検知用
+    private bool isFall = false;
+
     float moveInput;
 
     private PlayerHP playerHP;
@@ -91,6 +94,7 @@ public class PlayerController : MonoBehaviour
 
         CheckGround();
         PlayerJump();
+        PlayerFall();
 
         // 踏んだ後の受付時間を減らす
         if (jumpBufferCounter > 0)
@@ -160,6 +164,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void PlayerFall()
+    {
+        // 落下中かどうかを Animator に送る
+        if (!hasBouncedThisFrame && RB2D.linearVelocity.y < -0.1f && isFall)
+        {
+            animator.SetTrigger("Fall");
+            isFall = false;
+        }
+    }
     private void CheckGround()
     {
         bool groundedNow = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
@@ -170,13 +183,19 @@ public class PlayerController : MonoBehaviour
             groundedNow = false;
         }
 
-        // ★ Animator へ地上/空中の状態を送る
+        // Animator へ地上/空中の状態を送る
         animator.SetBool("IsGround", groundedNow);
 
         // 二段ジャンプのリセット
         if (groundedNow)
         {
             canDoubleJump = true;
+        }
+
+        //落下検知リセット
+        if (groundedNow)
+        {
+            isFall = true;
         }
 
         isGrounded = groundedNow;
