@@ -108,6 +108,18 @@ public class PlayerController : MonoBehaviour
                 jumpBufferCounter = 0; // 受付終了
             }
         }
+
+        // Rキーでインベントリリセット
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            InventoryManager.Instance.ResetInventory();
+        }
+
+        // Iキーでインベントリ表示
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            InventoryManager.Instance.ShowInventory();
+        }
     }
 
     void FixedUpdate()
