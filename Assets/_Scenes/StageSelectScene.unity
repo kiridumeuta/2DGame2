@@ -1945,10 +1945,6 @@ PrefabInstance:
       propertyPath: gameOverManager
       value: 
       objectReference: {fileID: 1981783278}
-    - target: {fileID: 5108013102062259391, guid: 02d9e3fc865dea84baa6896ff4b2769c, type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8398415916871419264, guid: 02d9e3fc865dea84baa6896ff4b2769c, type: 3}
       propertyPath: m_Name
       value: Player

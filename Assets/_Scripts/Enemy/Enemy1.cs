@@ -19,7 +19,7 @@ public class Enemy1 : MonoBehaviour
     int defaultLayer;
     int noPushLayer;
 
-    // ← 追加：移動方向（-1 = 左、1 = 右）
+    // 追加：移動方向（-1 = 左、1 = 右）
     int moveDir = -1;
 
     private bool isActive = true; // 表示・動作中かどうか
@@ -29,7 +29,6 @@ public class Enemy1 : MonoBehaviour
     // 敵が破壊されたときに通知
     public delegate void EnemyDestroyed(Enemy1 enemy);
     public event System.Action<Enemy1> OnDestroyed;
-
 
     void Start()
     {
@@ -89,6 +88,7 @@ public class Enemy1 : MonoBehaviour
     public void DestroyEnemy()
     {
         OnDestroyed?.Invoke(this); // スポナーに通知
+
         Destroy(gameObject);       // 自分を破壊
     }
 
