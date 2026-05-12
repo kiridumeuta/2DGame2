@@ -11,9 +11,24 @@ public class Bullet1 : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(collision.CompareTag("Wall"))
+        {
+            Destroy(gameObject); // 壁か床に衝突したら弾を破壊
+        }
         if (collision.CompareTag("Enemy"))
         {
             Destroy(gameObject); // 衝突したら弾を破壊
+
+            Enemy1 enemy = collision.GetComponent<Enemy1>();
+            EnemyJump enemyjump = collision.GetComponent<EnemyJump>();
+            if (enemy != null)
+            {
+                enemy.DestroyEnemy(); // スポナーに通知される
+            }
+            if (enemyjump != null)
+            {
+                enemyjump.DestroyEnemy(); // スポナーに通知される
+            }
         }
     }
 }

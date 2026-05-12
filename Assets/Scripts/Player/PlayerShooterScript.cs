@@ -13,16 +13,22 @@ public class PlayerShooterScript : MonoBehaviour
 
     private WeaponData currentWeapon;
 
+    private SpriteRenderer playerSprite;
+
     private void Start()
     {
         // currentWaponIDに基づいて武器を装備する
         EquipWeapon(currentWeaponID);
+
+        playerSprite = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
+        FlipWeapon();
+
         // currentWeaponがnullでなく、かつInventoryManagerにcurrentWeaponのweaponIDが存在する場合
-        if (currentWeapon !=null && InventoryManager.Instance.HasItem(currentWeapon.weaponID))
+        if (currentWeapon != null && InventoryManager.Instance.HasItem(currentWeapon.weaponID))
         {
             // 武器を表示する
             currentWeapon.gunObject.SetActive(true);
@@ -39,6 +45,35 @@ public class PlayerShooterScript : MonoBehaviour
             // 武器を非表示にする
             currentWeapon.gunObject.SetActive(false);
         }
+    }
+
+    private void FlipWeapon()
+    {
+        if(currentWeapon == null || currentWeapon.gunObject == null)
+        {
+            return;
+        }
+
+        Vector3 scale = currentWeapon.gunObject.transform.localScale;
+
+        if (playerSprite.flipX)
+        {
+            scale.x = -Mathf.Abs(scale.x);
+
+            firePoint.localRotation = Quaternion.Euler(0, 180, 0);
+
+            firePoint.localPosition=new Vector3(-0.5f,firePoint.localPosition.y,firePoint.localPosition.z);
+        }
+        else
+        {
+            scale.x = Mathf.Abs(scale.x);
+
+            firePoint.localRotation = Quaternion.identity;
+
+            firePoint.localPosition =new Vector3(0.5f, firePoint.localPosition.y, firePoint.localPosition.z);
+        }
+
+        currentWeapon.gunObject.transform.localScale = scale;
     }
 
     // 武器を装備するメソッド

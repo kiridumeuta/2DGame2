@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private float SuperBoundJump = 16f;
     [SerializeField, Header("強ジャンプ受付時間")]
     private float jumpBufferTime = 0.2f;
-    private float jumpBufferCounter = 0f;   // ←内部カウンタ
+    private float jumpBufferCounter = 0f;   // 内部カウンタ
 
     [Header("無敵時間")]
     [SerializeField] private float invincibleTime = 1.5f;
@@ -144,6 +144,7 @@ public class PlayerController : MonoBehaviour
         bool isWalking = (Mathf.Abs(moveInput) > 0f) && isGrounded;
         animator.SetBool("Walk", isWalking);
     }
+
     private void PlayerJump()
     {
 
@@ -185,6 +186,7 @@ public class PlayerController : MonoBehaviour
             isFall = false;
         }
     }
+
     private void CheckGround()
     {
         bool groundedNow = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
@@ -211,7 +213,6 @@ public class PlayerController : MonoBehaviour
         }
 
         isGrounded = groundedNow;
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -237,11 +238,11 @@ public class PlayerController : MonoBehaviour
                 EnemyJump enemyjump = collision.GetComponent<EnemyJump>();
                 if (enemy != null)
                 {
-                    enemy.DestroyEnemy(); // ← スポナーに通知される
+                    enemy.DestroyEnemy(); // スポナーに通知される
                 }
                 if (enemyjump != null)
                 {
-                    enemyjump.DestroyEnemy(); // ← スポナーに通知される
+                    enemyjump.DestroyEnemy(); // スポナーに通知される
                 }
 
                 hasBouncedThisFrame = true; // このフレームではもうダメージを受けない

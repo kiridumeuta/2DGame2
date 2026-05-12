@@ -113,7 +113,7 @@ public class Enemy1 : MonoBehaviour
         moveDir *= -1;
         sr.flipX = moveDir > 0;
 
-        // ÇﬂÇËçûÇ›ñhé~ÅiÇ®Ç‹Ç∂Ç»Ç¢Åj
+        // ÇﬂÇËçûÇ›ñhé~
         rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
     }
 }

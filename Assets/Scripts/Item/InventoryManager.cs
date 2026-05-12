@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.IO; // ファイル保存/読み込みのための名前空間
 using System.Linq;
-using Unity.VisualScripting; // FirstOrDefaultを使用するための名前空間
 
 public class InventoryManager : MonoBehaviour
 {
@@ -102,10 +101,12 @@ public class InventoryManager : MonoBehaviour
     // 読み込み
     public void LoadInventory()
     {
+        // 保存ファイルが存在するかどうかを確認
         if (File.Exists(savePath))
         {
             try
             {
+                // JSON文字列をファイルから読み込む
                 string json = File.ReadAllText(savePath);
 
                 // JSONが空の場合は新しいインベントリを作成
@@ -115,6 +116,7 @@ public class InventoryManager : MonoBehaviour
                     return;
                 }
 
+                // JSON文字列をInventoryDataオブジェクトに変換する
                 inventory = JsonUtility.FromJson<InventoryData>(json);
 
                 // JSONの形式が正しくない場合や、InventoryDataに変換できない場合は新しいインベントリを作成
@@ -128,15 +130,6 @@ public class InventoryManager : MonoBehaviour
                 Debug.LogError("JSON読み込み失敗：新規インベントリを作成");
                 inventory = new InventoryData();
             }
-        }
-
-        // 保存ファイルが存在するかどうかを確認
-        if (File.Exists(savePath))
-        {
-            // JSON文字列をファイルから読み込む
-            string json = File.ReadAllText(savePath);
-            // JSON文字列をInventoryDataオブジェクトに変換する
-            inventory = JsonUtility.FromJson<InventoryData>(json);
         }
         else
         {
