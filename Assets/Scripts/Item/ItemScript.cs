@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Item1Script : MonoBehaviour
+public class ItemScript : MonoBehaviour
 {
     // アイテムID
     [SerializeField] private string itemID = "gun";
@@ -11,10 +11,13 @@ public class Item1Script : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // InventoryManagerに追加
-        InventoryManager.Instance.AddItem(itemID, itemName, false, count);
+        if (collision.CompareTag("Player"))
+        {
+            // InventoryManagerに追加
+            InventoryManager.Instance.AddItem(itemID, itemName, false, count);
 
-        // アイテム削除
-        Destroy(gameObject);
+            // アイテム削除
+            Destroy(gameObject);
+        }
     }
 }

@@ -14,6 +14,7 @@ public class InventoryManager : MonoBehaviour
     // JSONファイルの保存先パスを保持する変数
     private string savePath;
 
+    // オブジェクトが生成されたときに呼び出される
     private void Awake()
     {
         // シングルトンがまだ存在しない場合は、このインスタンスをシングルトンとして設定し、
@@ -40,7 +41,7 @@ public class InventoryManager : MonoBehaviour
         LoadInventory();
     }
 
-    // インベントリにアイテムを追加するメソッド→
+    // インベントリにアイテムを追加するメソッド
     // id：識別ID
     // name：表示名
     // amount：増加数（デフォルトは1）
@@ -78,6 +79,12 @@ public class InventoryManager : MonoBehaviour
 
         // 追加後に保存
         SaveInventory();
+    }
+
+    // 指定のアイテムを所持しているかどうかを確認するメソッド
+    public bool HasItem(string id)
+    {
+        return inventory.items.Exists(item=> item.itemID==id && item.count > 0);
     }
 
     // 保存
