@@ -21,14 +21,6 @@ public class PlayerController : MonoBehaviour
     private float jumpBufferTime = 0.2f;
     private float jumpBufferCounter = 0f;   // 内部カウンタ
 
-    [Header("無敵時間")]
-    [SerializeField] private float invincibleTime = 1.5f;
-
-    private bool isInvincible = false;
-
-    int defaultLayer;
-    int invincibleLayer;
-
     [SerializeField, Header("地面レイヤー")]
     private LayerMask groundLayer;
     [SerializeField, Header("地面判定の位置")]
@@ -51,6 +43,7 @@ public class PlayerController : MonoBehaviour
 
     private PlayerInput playerInput;
     private PlayerHP playerHP;
+    private PlayerDamage playerDamage;
     private PlayerAnimationController animController;
 
 
@@ -67,15 +60,13 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        playerDamage = GetComponent<PlayerDamage>();
         animController = GetComponent<PlayerAnimationController>();
 
         RB2D = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerHP = GetComponent<PlayerHP>();
         audioSource = GetComponent<AudioSource>();
-
-        defaultLayer = gameObject.layer;
-        invincibleLayer = LayerMask.NameToLayer("PlayerInvincible");
 
         // シーン内の GameOverManager を探す
         if (gameOverManager == null)
@@ -253,8 +244,11 @@ public class PlayerController : MonoBehaviour
             }
             else if (!hasBouncedThisFrame)
             {
-                Debug.Log("敵に当たりました");
-                TakeDamage(30); // ライフを減らす
+                if (playerDamage != null)
+                {
+                    // ライフを減らす
+                    playerDamage.TakeDamage(30);
+                }
             }
         }
 
@@ -292,42 +286,5 @@ public class PlayerController : MonoBehaviour
     private void StrongBoundJump()
     {
         RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, SuperBoundJump);
-    }
-
-    public void TakeDamage(int damage)
-    {
-        if (isInvincible) return;
-
-        audioSource.PlayOneShot(damageSE);
-
-        playerHP.TakeDamage(damage);
-
-        if (playerHP.currentHP > 0)
-        {
-            StartCoroutine(InvincibleCoroutine());
-        }
-    }
-
-    private IEnumerator InvincibleCoroutine()
-    {
-        isInvincible = true;
-
-        // レイヤー変更
-        gameObject.layer = invincibleLayer;
-
-        float timer = 0f;
-        while (timer < invincibleTime)
-        {
-            spriteRenderer.enabled = !spriteRenderer.enabled;
-            yield return new WaitForSeconds(0.1f);
-            timer += 0.1f;
-        }
-
-        spriteRenderer.enabled = true;
-
-        // レイヤー戻す
-        gameObject.layer = defaultLayer;
-
-        isInvincible = false;
     }
 }
