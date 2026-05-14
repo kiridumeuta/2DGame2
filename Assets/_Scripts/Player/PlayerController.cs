@@ -1,7 +1,5 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 
 public class PlayerController : MonoBehaviour
@@ -51,7 +49,9 @@ public class PlayerController : MonoBehaviour
 
     float moveInput;
 
+    private PlayerInput playerInput;
     private PlayerHP playerHP;
+    private PlayerAnimationController animController;
 
 
     Rigidbody2D RB2D;
@@ -64,10 +64,9 @@ public class PlayerController : MonoBehaviour
 
     private AudioSource audioSource;
 
-    private PlayerAnimationController animController;
-
     void Start()
     {
+        playerInput = GetComponent<PlayerInput>();
         animController = GetComponent<PlayerAnimationController>();
 
         RB2D = GetComponent<Rigidbody2D>();
@@ -95,10 +94,7 @@ public class PlayerController : MonoBehaviour
         // 毎フレームリセット
         hasBouncedThisFrame = false;
 
-        moveInput = 0f;
-
-        if (Input.GetKey(KeyCode.D)) moveInput = 1f;
-        if (Input.GetKey(KeyCode.A)) moveInput = -1f;
+        moveInput = playerInput.MoveInput;
 
         CheckGround();
         PlayerJump();
@@ -110,7 +106,7 @@ public class PlayerController : MonoBehaviour
             jumpBufferCounter -= Time.deltaTime;
 
             // 強ジャンプ入力があったら
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (playerInput.JumpPressed)
             {
                 StrongBoundJump();
                 jumpBufferCounter = 0; // 受付終了
@@ -118,13 +114,13 @@ public class PlayerController : MonoBehaviour
         }
 
         // Rキーでインベントリリセット
-        if (Input.GetKeyDown(KeyCode.R))
+        if (playerInput.ResetInventoryPressed)
         {
             InventoryManager.Instance.ResetInventory();
         }
 
         // Iキーでインベントリ表示
-        if (Input.GetKeyDown(KeyCode.I))
+        if (playerInput.ShowInventoryPressed)
         {
             InventoryManager.Instance.ShowInventory();
         }
@@ -157,7 +153,7 @@ public class PlayerController : MonoBehaviour
     {
 
         // 1段目ジャンプ（地上）
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (playerInput.JumpPressed && isGrounded)
         {
             audioSource.PlayOneShot(jumpSE);
 
@@ -170,7 +166,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // 2段目ジャンプ（空中）
-        if (Input.GetKeyDown(KeyCode.Space) && !isGrounded && canDoubleJump)
+        if (playerInput.JumpPressed && !isGrounded && canDoubleJump)
         {
             // 一度速度をリセットすると綺麗な二段ジャンプになる
             RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, 0f);

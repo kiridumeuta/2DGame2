@@ -187,6 +187,8 @@ GameObject:
   - component: {fileID: 2571960216129228255}
   - component: {fileID: 2106786821460853786}
   - component: {fileID: 6500893121613694730}
+  - component: {fileID: 5723853367450550975}
+  - component: {fileID: 138929513332960676}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -356,6 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   gameOverManager: {fileID: 0}
+  gameClearManager: {fileID: 0}
   moveSpeed: 5
   JumpForce: 12
   BoundJump: 8
@@ -573,3 +576,27 @@ MonoBehaviour:
     spreadAngle: 1
   currentWeaponID: gun
   firePoint: {fileID: 7507235006919961774}
+--- !u!114 &5723853367450550975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398415916871419264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b639dc8e6be31e442b230ee0439ca4da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
+--- !u!114 &138929513332960676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398415916871419264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fe445f020a15244d9013757560c006b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
