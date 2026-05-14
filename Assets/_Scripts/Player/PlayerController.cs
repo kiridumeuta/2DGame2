@@ -7,6 +7,7 @@ using static UnityEngine.GraphicsBuffer;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameOverManager gameOverManager;  // GameOverManagerをインスペクターから参照
+    [SerializeField] private GameClearManager gameClearManager;  // GameClearManagerをインスペクターから参照
 
     [SerializeField, Header("移動速度")]
     private float moveSpeed = 5f;
@@ -79,6 +80,11 @@ public class PlayerController : MonoBehaviour
         if (gameOverManager == null)
         {
             Debug.LogError("GameOverManagerが設定されていません");
+        }
+        // シーン内の GameClearManager を探す
+        if (gameClearManager == null)
+        {
+            Debug.LogError("GameClearManagerが設定されていません");
         }
     }
 
@@ -253,6 +259,7 @@ public class PlayerController : MonoBehaviour
                 TakeDamage(30); // ライフを減らす
             }
         }
+
         // 奈落判定
         if (collision.CompareTag("Fall"))
         {
@@ -266,6 +273,21 @@ public class PlayerController : MonoBehaviour
                 RB2D.simulated = false;
             }
         }
+
+        // ゴール判定
+        if (collision.CompareTag("Goal"))
+        {
+            if (gameClearManager != null)
+            {
+                // GameClearManager に処理を任せる
+                gameClearManager.TriggerGameClear();
+
+                // 操作を止める
+                RB2D.linearVelocity = Vector2.zero;
+                RB2D.simulated = false;
+            }
+        }
+
     }
 
     //強ジャンプ処理
