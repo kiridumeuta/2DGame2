@@ -12,13 +12,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Header("ジャンプ力")]
     private float JumpForce = 14f;
-    [SerializeField, Header("踏んだ後のジャンプ力")]
-    private float BoundJump = 8f;
 
     [SerializeField, Header("強ジャンプ（踏んだ後）")]
     private float SuperBoundJump = 16f;
-    [SerializeField, Header("強ジャンプ受付時間")]
-    private float jumpBufferTime = 0.2f;
     private float jumpBufferCounter = 0f;   // 内部カウンタ
 
     [SerializeField, Header("地面レイヤー")]
@@ -53,7 +49,6 @@ public class PlayerController : MonoBehaviour
     [Header("SE")]
     [SerializeField] private AudioClip jumpSE;   // ジャンプした音
     [SerializeField] private AudioClip doublejumpSE;  // 二段ジャンプした音
-    [SerializeField] private AudioClip stompSE;   // 敵を踏んだ音
     [SerializeField] private AudioClip damageSE;  // ダメージ音
 
     private AudioSource audioSource;
