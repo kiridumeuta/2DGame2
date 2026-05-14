@@ -7170,6 +7170,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDamage
   invincibleTime: 1.5
   damageSE: {fileID: 8300000, guid: 316e6593d7661bb4983f6977da3b3eba, type: 3}
+--- !u!114 &1592011146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 175180164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80c22df8b434314eafa061041cdd4cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCollision
+  gameOverManager: {fileID: 2133246717}
+  gameClearManager: {fileID: 1495382114}
+  boundJump: 8
+  jumpBufferTime: 0.2
+  stompSE: {fileID: 8300000, guid: c06b8e1a00cdfdf4a99243063f6509df, type: 3}
 --- !u!1 &1653375914
 GameObject:
   m_ObjectHideFlags: 0
@@ -8117,6 +8134,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8398415916871419264, guid: 02d9e3fc865dea84baa6896ff4b2769c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1592011145}
+    - targetCorrespondingSourceObject: {fileID: 8398415916871419264, guid: 02d9e3fc865dea84baa6896ff4b2769c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1592011146}
   m_SourcePrefab: {fileID: 100100000, guid: 02d9e3fc865dea84baa6896ff4b2769c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     private PlayerInput playerInput;
     private PlayerHP playerHP;
     private PlayerDamage playerDamage;
+    private PlayerCollision playerCollision;
     private PlayerAnimationController animController;
 
 
@@ -57,10 +58,13 @@ public class PlayerController : MonoBehaviour
 
     private AudioSource audioSource;
 
+    public bool HasBouncedThisFrame => hasBouncedThisFrame;
+
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         playerDamage = GetComponent<PlayerDamage>();
+        playerCollision = GetComponent<PlayerCollision>();
         animController = GetComponent<PlayerAnimationController>();
 
         RB2D = GetComponent<Rigidbody2D>();
@@ -212,74 +216,22 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
-        {
-            // プレイヤーが落下中かを判定
-            if (!hasBouncedThisFrame && RB2D.linearVelocity.y < -0.1f)
-            {
-                audioSource.PlayOneShot(stompSE);
+        playerCollision.HandleTriggerEnter(collision);
+    }
 
-                // 反動で跳ね返る
-                RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, BoundJump);
+    public void SetBouncedThisFrame(bool value)
+    {
+        hasBouncedThisFrame = value;
+    }
 
-                // 強ジャンプ受付を開始
-                jumpBufferCounter = jumpBufferTime;
+    public void ResetDoubleJump()
+    {
+        canDoubleJump = true;
+    }
 
-                // 空中ジャンプリセット
-                canDoubleJump = true;
-
-                // 敵を消す処理 ←ここを DestroyEnemy() に置き換える
-                Enemy1 enemy = collision.GetComponent<Enemy1>();
-                EnemyJump enemyjump = collision.GetComponent<EnemyJump>();
-                if (enemy != null)
-                {
-                    enemy.DestroyEnemy(); // スポナーに通知される
-                }
-                if (enemyjump != null)
-                {
-                    enemyjump.DestroyEnemy(); // スポナーに通知される
-                }
-
-                hasBouncedThisFrame = true; // このフレームではもうダメージを受けない
-            }
-            else if (!hasBouncedThisFrame)
-            {
-                if (playerDamage != null)
-                {
-                    // ライフを減らす
-                    playerDamage.TakeDamage(30);
-                }
-            }
-        }
-
-        // 奈落判定
-        if (collision.CompareTag("Fall"))
-        {
-            if (gameOverManager != null)
-            {
-                // GameOverManager に処理を任せる
-                gameOverManager.TriggerGameOver();
-
-                // 操作を止める
-                RB2D.linearVelocity = Vector2.zero;
-                RB2D.simulated = false;
-            }
-        }
-
-        // ゴール判定
-        if (collision.CompareTag("Goal"))
-        {
-            if (gameClearManager != null)
-            {
-                // GameClearManager に処理を任せる
-                gameClearManager.TriggerGameClear();
-
-                // 操作を止める
-                RB2D.linearVelocity = Vector2.zero;
-                RB2D.simulated = false;
-            }
-        }
-
+    public void StartJumpBuffer(float time)
+    {
+        jumpBufferCounter = time;
     }
 
     //強ジャンプ処理
