@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour
     private PlayerHP playerHP;
 
 
-    Animator animator;
     Rigidbody2D RB2D;
 
     [Header("SE")]
@@ -65,9 +64,12 @@ public class PlayerController : MonoBehaviour
 
     private AudioSource audioSource;
 
+    private PlayerAnimationController animController;
+
     void Start()
     {
-        animator = GetComponent<Animator>();
+        animController = GetComponent<PlayerAnimationController>();
+
         RB2D = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerHP = GetComponent<PlayerHP>();
@@ -148,7 +150,7 @@ public class PlayerController : MonoBehaviour
         }
 
         bool isWalking = (Mathf.Abs(moveInput) > 0f) && isGrounded;
-        animator.SetBool("Walk", isWalking);
+        animController.SetWalk(isWalking);
     }
 
     private void PlayerJump()
@@ -161,7 +163,7 @@ public class PlayerController : MonoBehaviour
 
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
 
-            animator.SetTrigger("JumpStart"); // ← Trigger に変更
+            animController.PlayJump(); // ← Trigger に変更
 
             canDoubleJump = true;  // 空中でもう1回OK
             return;
@@ -177,7 +179,7 @@ public class PlayerController : MonoBehaviour
 
             RB2D.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
 
-            animator.SetTrigger("DoubleJump"); // ← Trigger
+            animController.PlayDoubleJump(); // ← Trigger
 
             canDoubleJump = false;  // もう二段ジャンプ不可
         }
@@ -188,7 +190,7 @@ public class PlayerController : MonoBehaviour
         // 落下中かどうかを Animator に送る
         if (!hasBouncedThisFrame && RB2D.linearVelocity.y < -0.1f && isFall)
         {
-            animator.SetTrigger("Fall");
+            animController.PlayFall();
             isFall = false;
         }
     }
@@ -204,7 +206,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Animator へ地上/空中の状態を送る
-        animator.SetBool("IsGround", groundedNow);
+        animController.SetGround(groundedNow);
 
         // 二段ジャンプのリセット
         if (groundedNow)
