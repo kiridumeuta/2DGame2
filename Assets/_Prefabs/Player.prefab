@@ -189,6 +189,10 @@ GameObject:
   - component: {fileID: 6500893121613694730}
   - component: {fileID: 5723853367450550975}
   - component: {fileID: 138929513332960676}
+  - component: {fileID: 5292153420211442291}
+  - component: {fileID: 5386262350778788991}
+  - component: {fileID: 4613357134211591271}
+  - component: {fileID: 4823650875328846303}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -361,10 +365,7 @@ MonoBehaviour:
   gameClearManager: {fileID: 0}
   moveSpeed: 5
   JumpForce: 12
-  BoundJump: 8
   SuperBoundJump: 16
-  jumpBufferTime: 0.1
-  invincibleTime: 1.5
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -372,7 +373,6 @@ MonoBehaviour:
   groundCheckRadius: 0.2
   jumpSE: {fileID: 8300000, guid: ba7a5ce86607ede4a8c0801553c814cb, type: 3}
   doublejumpSE: {fileID: 8300000, guid: de9d6f486fa1b874b818986732a713fa, type: 3}
-  stompSE: {fileID: 8300000, guid: c06b8e1a00cdfdf4a99243063f6509df, type: 3}
   damageSE: {fileID: 8300000, guid: 316e6593d7661bb4983f6977da3b3eba, type: 3}
 --- !u!95 &3447349769151901793
 Animator:
@@ -600,3 +600,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fe445f020a15244d9013757560c006b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
+--- !u!114 &5292153420211442291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398415916871419264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b639dc8e6be31e442b230ee0439ca4da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
+--- !u!114 &5386262350778788991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398415916871419264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fe445f020a15244d9013757560c006b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
+--- !u!114 &4613357134211591271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398415916871419264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7ffd7cfd5bde594eb7ab8cbd0cfdb8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDamage
+  invincibleTime: 1.5
+  damageSE: {fileID: 8300000, guid: 316e6593d7661bb4983f6977da3b3eba, type: 3}
+--- !u!114 &4823650875328846303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398415916871419264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80c22df8b434314eafa061041cdd4cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCollision
+  gameOverManager: {fileID: 0}
+  gameClearManager: {fileID: 0}
+  boundJump: 8
+  jumpBufferTime: 0.2
+  stompSE: {fileID: 8300000, guid: c06b8e1a00cdfdf4a99243063f6509df, type: 3}
