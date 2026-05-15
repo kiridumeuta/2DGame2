@@ -16,9 +16,20 @@ public class GameOverManager : MonoBehaviour
     [Header("ゲームオーバーシーン名")]
     [SerializeField] private string gameOverSceneName = "GameOverScene";
 
+    // ゲームオーバー中かどうか
+    public bool IsGameOver { get; private set; } = false;
+
     // プレイヤー死亡時に呼ぶ
     public void TriggerGameOver()
     {
+        if (IsGameOver)
+        {
+            // すでにゲームオーバー処理が始まっている場合は何もしない
+            return;
+        }
+
+        IsGameOver = true;
+
         // コルーチン開始
         // 徐々に暗転
         StartCoroutine(FadeOutAndLoadScene());
