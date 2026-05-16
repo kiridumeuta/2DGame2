@@ -7176,7 +7176,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 60bf70cb28deb7448b2377c529a07e38, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -8252,6 +8252,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2106786821460853786, guid: 02d9e3fc865dea84baa6896ff4b2769c, type: 3}
+      propertyPath: m_Volume
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 3348067016612149317, guid: 02d9e3fc865dea84baa6896ff4b2769c, type: 3}
       propertyPath: gameOverManager
       value: 
@@ -8276,6 +8280,10 @@ PrefabInstance:
       propertyPath: gameClearManager
       value: 
       objectReference: {fileID: 1495382114}
+    - target: {fileID: 6500893121613694730, guid: 02d9e3fc865dea84baa6896ff4b2769c, type: 3}
+      propertyPath: shotSE
+      value: 
+      objectReference: {fileID: 8300000, guid: 89facebb6d13dce43b09b7259dc6b354, type: 3}
     - target: {fileID: 8398415916871419264, guid: 02d9e3fc865dea84baa6896ff4b2769c, type: 3}
       propertyPath: m_Name
       value: Player

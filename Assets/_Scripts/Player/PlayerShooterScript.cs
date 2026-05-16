@@ -1,6 +1,7 @@
 using NUnit.Framework;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Audio;
 
 public class PlayerShooterScript : MonoBehaviour
 {
@@ -9,6 +10,11 @@ public class PlayerShooterScript : MonoBehaviour
 
     [Header("発射位置")]
     [SerializeField] private Transform firePoint;
+
+    private AudioSource audioSource;
+
+    [Header("SE")]
+    [SerializeField] private AudioClip shotSE;
 
     // 現在所持している武器一覧
     private List<WeaponData> ownedWeapons = new List<WeaponData>();
@@ -27,6 +33,8 @@ public class PlayerShooterScript : MonoBehaviour
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+
         // プレイヤー自身のSpriteRenderer取得
         playerSpriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -165,6 +173,8 @@ public class PlayerShooterScript : MonoBehaviour
     {
         // 弾Prefabが無いなら終了
         if (currentWeapon.bulletPrefab == null) return;
+
+        audioSource.PlayOneShot(shotSE);
 
         // 弾数分生成
         for (int i = 0; i < currentWeapon.bulletCount; i++)

@@ -6,6 +6,9 @@ public class Bullet1 : MonoBehaviour
 
     [SerializeField] private GameObject explosionPrefab; // 爆発エフェクトのプレハブ
 
+    [Header("SE")]
+    [SerializeField] private AudioClip explosionSE;
+
     void Start()
     {
         Destroy(gameObject, lifeTime); // 一定時間後に弾を破壊
@@ -13,29 +16,41 @@ public class Bullet1 : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Wall"))
+        if (collision.CompareTag("Wall"))
         {
             Destroy(gameObject); // 壁か床に衝突したら弾を破壊
+            return;
         }
+
         if (collision.CompareTag("Enemy"))
         {
-            Destroy(gameObject); // 衝突したら弾を破壊
+            // 爆発音
+            if (explosionSE != null)
+            {
+                AudioSource.PlayClipAtPoint(explosionSE, transform.position, 1f);
+            }
 
-            if(explosionPrefab != null)
+            // 爆発エフェクト
+            if (explosionPrefab != null)
             {
                 Instantiate(explosionPrefab, transform.position, Quaternion.identity); // 爆発エフェクトを生成
             }
 
             Enemy1 enemy = collision.GetComponent<Enemy1>();
-            EnemyJump enemyjump = collision.GetComponent<EnemyJump>();
+
             if (enemy != null)
             {
                 enemy.DestroyEnemy(); // スポナーに通知される
             }
+
+            EnemyJump enemyjump = collision.GetComponent<EnemyJump>();
+
             if (enemyjump != null)
             {
                 enemyjump.DestroyEnemy(); // スポナーに通知される
             }
+
+            Destroy(gameObject); // 衝突したら弾を破壊
         }
     }
 }

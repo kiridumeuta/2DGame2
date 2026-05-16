@@ -280,8 +280,6 @@ GameObject:
   - component: {fileID: 6500893121613694730}
   - component: {fileID: 5723853367450550975}
   - component: {fileID: 138929513332960676}
-  - component: {fileID: 5292153420211442291}
-  - component: {fileID: 5386262350778788991}
   - component: {fileID: 4613357134211591271}
   - component: {fileID: 4823650875328846303}
   m_Layer: 7
@@ -695,30 +693,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
 --- !u!114 &138929513332960676
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8398415916871419264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fe445f020a15244d9013757560c006b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
---- !u!114 &5292153420211442291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8398415916871419264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b639dc8e6be31e442b230ee0439ca4da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
---- !u!114 &5386262350778788991
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
