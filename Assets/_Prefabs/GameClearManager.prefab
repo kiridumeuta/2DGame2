@@ -46,4 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameClearManager
   fadePanel: {fileID: 0}
   fadeDuration: 3
+  maxFadeAlpha: 0.9
   gameClearSceneName: GameClearScene

@@ -12,6 +12,10 @@ public class GameOverManager : MonoBehaviour
     [Header("暗転時間")]
     [SerializeField] private float fadeDuration = 3f;
 
+    // 暗転の最大濃さ（0 = 完全透明、1 = 完全に黒）
+    [Header("暗転の最大濃さ")]
+    [SerializeField] private float maxFadeAlpha = 0.5f;
+
     // 暗転後に読み込むゲームオーバー画面のシーン名
     [Header("ゲームオーバーシーン名")]
     [SerializeField] private string gameOverSceneName = "GameOverScene";
@@ -44,9 +48,8 @@ public class GameOverManager : MonoBehaviour
         // fadeDuration秒になるまで繰り返す
         while (timer < fadeDuration)
         {
-            // fadePanel.alpha を 0 → 1 に徐々に変化
-            // 0 = 完全透明、1 = 完全に黒
-            fadePanel.alpha = Mathf.Lerp(0, 1, timer / fadeDuration);
+            // fadePanelのalphaを0からmaxFadeAlphaまで徐々に変化させる
+            fadePanel.alpha = Mathf.Lerp(0f, maxFadeAlpha, timer / fadeDuration);
 
             // 毎フレーム経過時間を加算
             timer += Time.deltaTime;
@@ -55,10 +58,10 @@ public class GameOverManager : MonoBehaviour
             yield return null;
         }
 
-        // 念のため最後に完全に暗転状態にする
-        fadePanel.alpha = 1f;
+        // 最終的にalphaをmaxFadeAlphaに設定して完全に暗転させる
+        fadePanel.alpha = maxFadeAlpha;
 
-        // 指定したゲームオーバーシーンを読み込む
-        SceneManager.LoadScene(gameOverSceneName);
+        // ゲームオーバーシーンを重ねる
+        SceneManager.LoadScene(gameOverSceneName, LoadSceneMode.Additive);
     }
 }
