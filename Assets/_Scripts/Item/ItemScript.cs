@@ -16,6 +16,16 @@ public class ItemScript : MonoBehaviour
             // InventoryManagerに追加
             InventoryManager.Instance.AddItem(itemID, itemName, false, count);
 
+            // 武器一覧更新
+            PlayerShooterScript playerShooter = collision.GetComponent<PlayerShooterScript>();
+
+            // 見つかった場合
+            if (playerShooter != null)
+            {
+                // 武器一覧を更新
+                playerShooter.RefreshOwnedWeapons();
+            }
+
             // アイテム削除
             Destroy(gameObject);
         }

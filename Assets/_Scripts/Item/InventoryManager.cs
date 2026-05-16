@@ -83,7 +83,7 @@ public class InventoryManager : MonoBehaviour
     // 指定のアイテムを所持しているかどうかを確認するメソッド
     public bool HasItem(string id)
     {
-        return inventory.items.Exists(item=> item.itemID==id && item.count > 0);
+        return inventory.items.Exists(item => item.itemID == id && item.count > 0);
     }
 
     // 保存
@@ -141,11 +141,25 @@ public class InventoryManager : MonoBehaviour
     // インベントリをリセットするメソッド
     public void ResetInventory()
     {
+        // インベントリ初期化
         inventory = new InventoryData();
 
+        // 保存ファイル削除
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
+        }
+
+        // PlayerShooterScript取得
+        PlayerShooterScript playerShooter = FindAnyObjectByType<PlayerShooterScript>();
+
+        // 武器一覧更新
+        if (playerShooter != null)
+        {
+            playerShooter.RefreshOwnedWeapons();
+
+            // 素手へ戻す
+            playerShooter.ForceEquipDefaultWeapon();
         }
 
         Debug.Log("インベントリをリセットしました。");

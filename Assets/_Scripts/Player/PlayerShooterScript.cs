@@ -1,136 +1,305 @@
+using NUnit.Framework;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerShooterScript : MonoBehaviour
 {
     [Header("武器一覧")]
-    [SerializeField] private WeaponData[] weapons;
-
-    [Header("現在装備ID")]
-    [SerializeField] private string currentWeaponID = "gun";
+    [SerializeField] private WeaponData[] allWeapons;
 
     [Header("発射位置")]
     [SerializeField] private Transform firePoint;
 
+    // 現在所持している武器一覧
+    private List<WeaponData> ownedWeapons = new List<WeaponData>();
+
+    // 現在装備している武器のID
+    private int currentWeaponIndex = 0;
+
+    // 現在装備している武器のデータ
     private WeaponData currentWeapon;
 
-    private SpriteRenderer playerSprite;
+    // プレイヤーが右向きかどうか
+    private bool isFacingRight = true;
+
+    // プレイヤーSpriteRenderer
+    private SpriteRenderer playerSpriteRenderer;
 
     private void Start()
     {
-        // currentWaponIDに基づいて武器を装備する
-        EquipWeapon(currentWeaponID);
+        // プレイヤー自身のSpriteRenderer取得
+        playerSpriteRenderer = GetComponent<SpriteRenderer>();
 
-        playerSprite = GetComponent<SpriteRenderer>();
+        RefreshOwnedWeapons();
+
+        // 初期装備
+        if (ownedWeapons.Count > 0)
+        {
+            EquipWeapon(currentWeaponIndex);
+        }
     }
 
     void Update()
     {
-        FlipWeapon();
-
-        // currentWeaponがnullでなく、かつInventoryManagerにcurrentWeaponのweaponIDが存在する場合
-        if (currentWeapon != null && InventoryManager.Instance.HasItem(currentWeapon.weaponID))
+        // プレイヤーSpriteの向き確認
+        if (playerSpriteRenderer != null)
         {
-            // 武器を表示する
-            currentWeapon.gunObject.SetActive(true);
+            // flipX=false → 右向き
+            isFacingRight = !playerSpriteRenderer.flipX;
+        }
 
-            // Fキーが押されたらShoot()を呼び出す
-            if (Input.GetKeyDown(KeyCode.F))
+        // 銃の向き更新
+        UpdateWeaponDirection();
+
+        // ←キーで前の武器
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            PreviousWeapon();
+        }
+
+        // →キーで次の武器
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            NextWeapon();
+        }
+
+        // 素手じゃない && Fキーで発射
+        if (currentWeapon != null &&
+            currentWeapon.weaponID != "none" &&
+            Input.GetKeyDown(KeyCode.F))
+        {
+            Shoot();
+        }
+    }
+
+    public void RefreshOwnedWeapons()
+    {
+        // 一旦空
+        ownedWeapons.Clear();
+
+        // 全武器チェック
+        foreach (var weapon in allWeapons)
+        {
+            // 素手は常に所持
+            if (weapon.weaponID == "none")
             {
-                Shoot();
+                ownedWeapons.Add(weapon);
+                Debug.Log("追加: " + weapon.weaponID);
+            }
+            // Inventoryにある武器だけ追加
+            else if (InventoryManager.Instance.HasItem(weapon.weaponID))
+            {
+                ownedWeapons.Add(weapon);
+                Debug.Log("追加: " + weapon.weaponID);
+            }
+            else
+            {
+                Debug.Log("未所持: " + weapon.weaponID);
             }
         }
-        // 武器未所持の場合は
-        else if ((currentWeapon != null))
+
+        Debug.Log("総武器数: " + ownedWeapons.Count);
+
+        // 現在Index調整
+        if (currentWeaponIndex >= ownedWeapons.Count)
         {
-            // 武器を非表示にする
-            currentWeapon.gunObject.SetActive(false);
+            currentWeaponIndex = 0;
         }
     }
 
-    private void FlipWeapon()
+    private void NextWeapon()
     {
-        if(currentWeapon == null || currentWeapon.gunObject == null)
+        if (ownedWeapons.Count == 0) return;
+
+        currentWeaponIndex++;
+
+        // 最後なら最初へ
+        if (currentWeaponIndex >= ownedWeapons.Count)
         {
-            return;
+            currentWeaponIndex = 0;
         }
 
-        Vector3 scale = currentWeapon.gunObject.transform.localScale;
-
-        if (playerSprite.flipX)
-        {
-            scale.x = -Mathf.Abs(scale.x);
-
-            firePoint.localRotation = Quaternion.Euler(0, 180, 0);
-
-            firePoint.localPosition=new Vector3(-0.5f,firePoint.localPosition.y,firePoint.localPosition.z);
-        }
-        else
-        {
-            scale.x = Mathf.Abs(scale.x);
-
-            firePoint.localRotation = Quaternion.identity;
-
-            firePoint.localPosition =new Vector3(0.5f, firePoint.localPosition.y, firePoint.localPosition.z);
-        }
-
-        currentWeapon.gunObject.transform.localScale = scale;
+        EquipWeapon(currentWeaponIndex);
     }
 
-    // 武器を装備するメソッド
-    public void EquipWeapon(string weaponID)
+    private void PreviousWeapon()
     {
-        // すべての武器を非表示にする
-        foreach (var weapon in weapons)
+        if (ownedWeapons.Count == 0) return;
+
+        currentWeaponIndex--;
+
+        // 最初より前なら最後へ
+        if (currentWeaponIndex < 0)
         {
-            if(weapon.gunObject != null)
+            currentWeaponIndex = ownedWeapons.Count - 1;
+        }
+
+        EquipWeapon(currentWeaponIndex);
+    }
+
+    private void EquipWeapon(int index)
+    {
+        // 全武器非表示
+        foreach (var weapon in allWeapons)
+        {
+            if (weapon.gunObject != null)
             {
                 weapon.gunObject.SetActive(false);
             }
         }
 
-        // 指定のweaponIDに一致する武器を検索
-        foreach (var weapon in weapons)
+        // 装備設定
+        currentWeapon = ownedWeapons[index];
+
+        // 武器表示
+        if (currentWeapon.gunObject != null)
         {
-            // weaponIDが一致する場合
-            if (weapon.weaponID == weaponID)
+            currentWeapon.gunObject.SetActive(true);
+        }
+
+        // デバッグ表示
+        Debug.Log("現在武器: " + currentWeapon.weaponName);
+    }
+
+    private void Shoot()
+    {
+        // 弾Prefabが無いなら終了
+        if (currentWeapon.bulletPrefab == null) return;
+
+        // 弾数分生成
+        for (int i = 0; i < currentWeapon.bulletCount; i++)
+        {
+            float angleOffset = 0f;
+
+            // 複数弾なら角度分散
+            if (currentWeapon.bulletCount > 1)
             {
-                // 現在の武器を更新
-                currentWeapon = weapon;
-                // 現在の武器IDを更新
-                currentWeaponID = weaponID;
-                // 武器を表示する
-                break;
+                angleOffset =
+                    ((i - (currentWeapon.bulletCount - 1) / 2f)
+                    * currentWeapon.spreadAngle);
             }
+
+            // 回転計算
+            Quaternion rotation =
+                firePoint.rotation *
+                Quaternion.Euler(0, 0, angleOffset);
+
+            // 弾生成
+            GameObject bullet =
+                Instantiate(
+                    currentWeapon.bulletPrefab,
+                    firePoint.position,
+                    rotation
+                );
+
+            // Rigidbody取得
+            Rigidbody2D rb =
+                bullet.GetComponent<Rigidbody2D>();
+
+            // ベース方向（右 / 左）
+            Vector2 baseDirection;
+
+            if (isFacingRight)
+            {
+                baseDirection = Vector2.right;
+            }
+            else
+            {
+                baseDirection = Vector2.left;
+            }
+
+            // 拡散角度を方向に反映
+            float finalAngle;
+
+            // 右向きならそのまま
+            if (isFacingRight)
+            {
+                finalAngle = angleOffset;
+            }
+            // 左向きなら180度反転
+            else
+            {
+                finalAngle = 180f - angleOffset;
+            }
+
+            // 角度から方向ベクトル作成
+            Vector2 shootDirection =
+                Quaternion.Euler(0, 0, finalAngle) *
+                Vector2.right;
+
+            // 発射
+            rb.linearVelocity =
+                shootDirection *
+                currentWeapon.bulletSpeed;
         }
     }
 
-    // 弾を発射するメソッド
-    private void Shoot()
+    // 武器の向きをプレイヤーに合わせる
+    private void UpdateWeaponDirection()
     {
-        // bulletCountの分だけループして弾を生成する
-        for (int i =0; i<currentWeapon.bulletCount; i++)
-        {
-            // 弾の角度の初期値を0に設定
-            float angleOffset = 0f;
+        // 武器が無いなら終了
+        if (currentWeapon == null || currentWeapon.gunObject == null)
+            return;
 
-            // 複数の弾を発射する場合は
-            if(currentWeapon.bulletCount > 1)
+        // gunObject内の全SpriteRenderer取得
+        SpriteRenderer[] gunSprites = currentWeapon.gunObject.GetComponentsInChildren<SpriteRenderer>();
+
+        foreach (SpriteRenderer sprite in gunSprites)
+        {
+            // プレイヤー向きに同期
+            sprite.flipX = !isFacingRight;
+        }
+
+        // 銃本体の位置調整
+        // プレイヤー右側 / 左側に持ち替える
+        Transform gunTransform = currentWeapon.gunObject.transform;
+
+        // 現在位置取得
+        Vector3 gunPos = gunTransform.localPosition;
+
+        if (isFacingRight)
+        {
+            // 右向きならXをプラス
+            gunPos.x = Mathf.Abs(gunPos.x);
+        }
+        else
+        {
+            // 左向きならXをマイナス
+            gunPos.x = -Mathf.Abs(gunPos.x);
+        }
+
+        // 位置反映
+        gunTransform.localPosition = gunPos;
+
+        // FirePoint位置調整
+        // 銃口位置を左右で反転
+        if (firePoint != null)
+        {
+            Vector3 firePos = firePoint.localPosition;
+
+            if (isFacingRight)
             {
-                // 中央を基準にして、spreadAngleに基づいて角度を計算する
-                angleOffset = ((i - (currentWeapon.bulletCount - 1) / 2f) * currentWeapon.spreadAngle);
+                // 右向き
+                firePos.x = Mathf.Abs(firePos.x);
+            }
+            else
+            {
+                // 左向き
+                firePos.x = -Mathf.Abs(firePos.x);
             }
 
-            // firePointの回転にangleOffsetを加算して、弾の回転を計算する
-            Quaternion rotation = firePoint.rotation * Quaternion.Euler(0, 0, angleOffset);
+            firePoint.localPosition = firePos;
+        }
+    }
 
-            // 弾Prefabを生成する
-            GameObject bullet = Instantiate(currentWeapon.bulletPrefab, firePoint.position, rotation);
-
-            // 生成した弾のRigidbody2Dコンポーネントを取得する
-            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-
-            // 弾の速度を設定する（firePointの右方向にcurrentWeapon.bulletSpeedの速度で発射する）
-            rb.linearVelocity = bullet.transform.right * currentWeapon.bulletSpeed;
+    // 素手（Index0想定）へ強制装備
+    public void ForceEquipDefaultWeapon()
+    {
+        // 武器があるなら最初（none）へ
+        if (ownedWeapons.Count > 0)
+        {
+            currentWeaponIndex = 0;
+            EquipWeapon(currentWeaponIndex);
         }
     }
 }
