@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class PlayerShooterScript : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class PlayerShooterScript : MonoBehaviour
 
     [Header("SE")]
     [SerializeField] private AudioClip shotSE;
+
+    //[Header("現在武器表示UI")]
+    //[SerializeField] private Text currentWeaponText;
 
     // 現在所持している武器一覧
     private List<WeaponData> ownedWeapons = new List<WeaponData>();
@@ -165,6 +169,9 @@ public class PlayerShooterScript : MonoBehaviour
             currentWeapon.gunObject.SetActive(true);
         }
 
+        // UI更新
+        //UpdateWeaponUI();
+
         // デバッグ表示
         Debug.Log("現在武器: " + currentWeapon.weaponName);
     }
@@ -311,5 +318,18 @@ public class PlayerShooterScript : MonoBehaviour
             currentWeaponIndex = 0;
             EquipWeapon(currentWeaponIndex);
         }
+    }
+
+    /*private void UpdateWeaponUI()
+    {
+        if (currentWeaponText != null && currentWeapon != null)
+        {
+            currentWeaponText.text = "武器： " + currentWeapon.weaponName;
+        }
+    }*/
+
+    public WeaponData GetCurrentWeapon()
+    {
+        return currentWeapon;
     }
 }
