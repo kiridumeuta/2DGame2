@@ -50,6 +50,15 @@ public class Bullet1 : MonoBehaviour
                 enemyjump.DestroyEnemy(); // スポナーに通知される
             }
 
+            // ボスにダメージを与える
+            BossHP boss =
+            collision.GetComponent<BossHP>();
+
+            if (boss != null)
+            {
+                boss.TakeDamage(10);
+            }
+
             Destroy(gameObject); // 衝突したら弾を破壊
         }
     }
