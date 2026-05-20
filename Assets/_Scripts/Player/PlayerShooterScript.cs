@@ -35,6 +35,9 @@ public class PlayerShooterScript : MonoBehaviour
     // プレイヤーSpriteRenderer
     private SpriteRenderer playerSpriteRenderer;
 
+    // プレイヤー操作可能かどうか
+    private bool canControl = true;
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -53,6 +56,9 @@ public class PlayerShooterScript : MonoBehaviour
 
     void Update()
     {
+        // 操作不可なら何もしない
+        if (!canControl) return;
+
         // プレイヤーSpriteの向き確認
         if (playerSpriteRenderer != null)
         {
@@ -331,5 +337,10 @@ public class PlayerShooterScript : MonoBehaviour
     public WeaponData GetCurrentWeapon()
     {
         return currentWeapon;
+    }
+
+    public void SetControl(bool value)
+    {
+        canControl = value;
     }
 }

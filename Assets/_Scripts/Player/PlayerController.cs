@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     private bool isGrounded;
+
+    private bool canControl = true;
+
     // 二段ジャンプ
     private bool canDoubleJump = false;
 
@@ -81,6 +84,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!canControl) return;
+
         // 毎フレームリセット
         hasBouncedThisFrame = false;
 
@@ -118,6 +123,8 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!canControl) return;
+
         PlayerMove();
     }
 
@@ -233,5 +240,17 @@ public class PlayerController : MonoBehaviour
     private void StrongBoundJump()
     {
         RB2D.linearVelocity = new Vector2(RB2D.linearVelocity.x, SuperBoundJump);
+    }
+
+    public void SetControl(bool value)
+    {
+        canControl = value;
+
+        // 停止時に慣性も止める
+        if (!value)
+        {
+            moveInput = 0f;
+            RB2D.linearVelocity = Vector2.zero;
+        }
     }
 }

@@ -20,6 +20,11 @@ public class GameOverManager : MonoBehaviour
     [Header("ゲームオーバーシーン名")]
     [SerializeField] private string gameOverSceneName = "GameOverScene";
 
+    // プレイヤーコントローラー参照
+    [SerializeField] private PlayerController player;
+    // プレイヤーシュータースクリプト参照
+    [SerializeField] private PlayerShooterScript playerShooter;
+
     // ゲームオーバー中かどうか
     public bool IsGameOver { get; private set; } = false;
 
@@ -33,6 +38,12 @@ public class GameOverManager : MonoBehaviour
         }
 
         IsGameOver = true;
+
+        // プレイヤー操作停止
+        player.SetControl(false);
+
+        // 銃操作停止
+        playerShooter.SetControl(false);
 
         // コルーチン開始
         // 徐々に暗転

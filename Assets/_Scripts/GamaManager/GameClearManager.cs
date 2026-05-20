@@ -16,9 +16,18 @@ public class GameClearManager : MonoBehaviour
     [Header("ゲームクリアシーン名")]
     [SerializeField] private string gameClearSceneName = "GameClearScene";
 
+    [SerializeField] private PlayerController player;
+    [SerializeField] private PlayerShooterScript playerShooter;
+
     // プレイヤークリア時に呼ぶ
     public void TriggerGameClear()
     {
+        // プレイヤー操作停止
+        player.SetControl(false);
+
+        // 銃操作停止
+        playerShooter.SetControl(false);
+
         StartCoroutine(FadeOutAndLoadScene());
     }
 

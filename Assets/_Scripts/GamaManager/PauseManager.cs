@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class PauseManager : MonoBehaviour
 
     [Header("GameOverManager参照")]
     [SerializeField] private GameOverManager gameOverManager;
+
+    [SerializeField] private PlayerController player;
+    [SerializeField] private PlayerShooterScript playerShooter;
 
     private bool isPaused = false;
 
@@ -45,6 +49,12 @@ public class PauseManager : MonoBehaviour
     {
         isPaused = true;
 
+        // プレイヤー操作停止
+        player.SetControl(false);
+
+        // 銃操作停止
+        playerShooter.SetControl(false);
+
         // UI表示
         pauseMenuUI.SetActive(true);
 
@@ -56,10 +66,43 @@ public class PauseManager : MonoBehaviour
     {
         isPaused = false;
 
+        // プレイヤー操作再開
+        player.SetControl(true);
+
+        // 銃操作再開
+        playerShooter.SetControl(true);
+
         // UI非表示
         pauseMenuUI.SetActive(false);
 
         // 時間再開
         Time.timeScale = 1f;
+    }
+
+    // タイトルへ戻る
+    public void GoToTitle()
+    {
+        // 時間を元に戻す
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene("StartScene");
+    }
+
+    // ステージ選択へ
+    public void GoToStageSelect()
+    {
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene("StageSelectScene");
+    }
+
+    // ゲーム終了
+    public void QuitGame()
+    {
+        Time.timeScale = 1f;
+
+        Application.Quit();
+
+        Debug.Log("ゲーム終了");
     }
 }
