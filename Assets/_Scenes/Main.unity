@@ -2531,7 +2531,9 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: -10}
   deadZoneSize: {x: 6, y: 7}
   minCamPos: {x: 0, y: -5}
-  maxCamPos: {x: 50, y: 10}
+  maxCamPos: {x: 100, y: 10}
+  defaultMinCamPos: {x: 0, y: 0}
+  defaultMaxCamPos: {x: 0, y: 0}
   isLocked: 0
 --- !u!1 &585950303
 GameObject:
@@ -2685,6 +2687,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRoomTrigger
   cameraPoint: {fileID: 172003875}
+  bossRoomMin: {x: 0, y: 0}
+  bossRoomMax: {x: 0, y: 0}
+  bossUI: {fileID: 620272452}
 --- !u!4 &589866348
 Transform:
   m_ObjectHideFlags: 0
@@ -8260,7 +8265,7 @@ Transform:
   m_GameObject: {fileID: 1073387722}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 72.05, y: -4.39, z: 0}
+  m_LocalPosition: {x: 90.39, y: -1.82, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

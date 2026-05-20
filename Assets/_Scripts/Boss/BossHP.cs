@@ -43,12 +43,14 @@ public class BossHP : MonoBehaviour
 
     void Dead()
     {
-        CameraManager cam =
-        Camera.main.GetComponent<CameraManager>();
+        CameraManager cam = Camera.main.GetComponent<CameraManager>();
 
         if (cam != null)
         {
             cam.UnlockCamera();
+
+            // ƒJƒƒ‰”ÍˆÍ–ß‚·
+            cam.ResetCameraArea();
         }
 
         OnDead?.Invoke();

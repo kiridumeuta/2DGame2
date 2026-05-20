@@ -19,10 +19,22 @@ public class CameraManager : MonoBehaviour
     [SerializeField, Header("カメラ移動範囲（最大）")]
     private Vector2 maxCamPos;
 
+    [Header("通常時カメラ範囲")]
+    [SerializeField] private Vector2 defaultMinCamPos;
+
+    [SerializeField] private Vector2 defaultMaxCamPos;
+
     [Header("カメラ固定")]
     [SerializeField] private bool isLocked = false;
 
     private Vector3 lockedPosition;
+
+    private void Start()
+    {
+        // 初期範囲保存
+        defaultMinCamPos = minCamPos;
+        defaultMaxCamPos = maxCamPos;
+    }
 
     void LateUpdate()
     {
@@ -113,5 +125,17 @@ public class CameraManager : MonoBehaviour
     public void UnlockCamera()
     {
         isLocked = false;
+    }
+
+    public void SetCameraArea(Vector2 min, Vector2 max)
+    {
+        minCamPos = min;
+        maxCamPos = max;
+    }
+
+    public void ResetCameraArea()
+    {
+        minCamPos = defaultMinCamPos;
+        maxCamPos = defaultMaxCamPos;
     }
 }
