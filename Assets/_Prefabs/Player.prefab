@@ -270,13 +270,13 @@ GameObject:
   m_Component:
   - component: {fileID: 66220532129671572}
   - component: {fileID: 228526399875006956}
-  - component: {fileID: 2049455131550255878}
   - component: {fileID: 4020644014215025497}
-  - component: {fileID: 3348067016612149317}
-  - component: {fileID: 3447349769151901793}
-  - component: {fileID: 4464846810558535983}
   - component: {fileID: 2571960216129228255}
+  - component: {fileID: 2049455131550255878}
+  - component: {fileID: 3447349769151901793}
   - component: {fileID: 2106786821460853786}
+  - component: {fileID: 3348067016612149317}
+  - component: {fileID: 4464846810558535983}
   - component: {fileID: 6500893121613694730}
   - component: {fileID: 5723853367450550975}
   - component: {fileID: 138929513332960676}
@@ -366,52 +366,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!61 &2049455131550255878
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8398415916871419264}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.01}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.7, y: 1}
-  m_EdgeRadius: 0
 --- !u!50 &4020644014215025497
 Rigidbody2D:
   serializedVersion: 5
@@ -439,69 +393,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &3348067016612149317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8398415916871419264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed079882d0d1568488ec7d92ae51b8b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  gameOverManager: {fileID: 0}
-  gameClearManager: {fileID: 0}
-  moveSpeed: 5
-  JumpForce: 12
-  SuperBoundJump: 16
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  groundCheck: {fileID: 7034983622834198190}
-  groundCheckRadius: 0.2
-  jumpSE: {fileID: 8300000, guid: ba7a5ce86607ede4a8c0801553c814cb, type: 3}
-  doublejumpSE: {fileID: 8300000, guid: de9d6f486fa1b874b818986732a713fa, type: 3}
-  damageSE: {fileID: 8300000, guid: 316e6593d7661bb4983f6977da3b3eba, type: 3}
---- !u!95 &3447349769151901793
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8398415916871419264}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 3953977823283a947b2292ab3b960383, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4464846810558535983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8398415916871419264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2dca27f187a6944cacc64425805b2ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHP
-  maxHP: 100
-  currentHP: 0
-  hpSlider: {fileID: 0}
-  gameOverManager: {fileID: 0}
 --- !u!61 &2571960216129228255
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -548,6 +439,74 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.8, y: 1.1}
   m_EdgeRadius: 0
+--- !u!61 &2049455131550255878
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398415916871419264}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0.01}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.7, y: 1}
+  m_EdgeRadius: 0
+--- !u!95 &3447349769151901793
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398415916871419264}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3953977823283a947b2292ab3b960383, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!82 &2106786821460853786
 AudioSource:
   m_ObjectHideFlags: 0
@@ -645,6 +604,47 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3348067016612149317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398415916871419264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed079882d0d1568488ec7d92ae51b8b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  gameOverManager: {fileID: 0}
+  gameClearManager: {fileID: 0}
+  moveSpeed: 5
+  JumpForce: 12
+  SuperBoundJump: 16
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  groundCheck: {fileID: 7034983622834198190}
+  groundCheckRadius: 0.2
+  jumpSE: {fileID: 8300000, guid: ba7a5ce86607ede4a8c0801553c814cb, type: 3}
+  doublejumpSE: {fileID: 8300000, guid: de9d6f486fa1b874b818986732a713fa, type: 3}
+  damageSE: {fileID: 8300000, guid: 316e6593d7661bb4983f6977da3b3eba, type: 3}
+--- !u!114 &4464846810558535983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398415916871419264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2dca27f187a6944cacc64425805b2ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHP
+  maxHP: 100
+  currentHP: 0
+  hpSlider: {fileID: 0}
+  gameOverManager: {fileID: 0}
 --- !u!114 &6500893121613694730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -680,6 +680,7 @@ MonoBehaviour:
     bulletCount: 3
     spreadAngle: 10
   firePoint: {fileID: 7507235006919961774}
+  shotSE: {fileID: 0}
 --- !u!114 &5723853367450550975
 MonoBehaviour:
   m_ObjectHideFlags: 0

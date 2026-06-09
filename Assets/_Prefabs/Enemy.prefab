@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 6404045511540221453}
   - component: {fileID: 1787116126490590148}
   - component: {fileID: 2794134770313687646}
-  - component: {fileID: 8594405445923285696}
   - component: {fileID: 6570903113125044011}
   - component: {fileID: 1412319644983234823}
+  - component: {fileID: 8594405445923285696}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Enemy
@@ -164,23 +164,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8594405445923285696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1776230119868192093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3af4c4ed524d8de459f7b24ae42c02a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy1
-  moveSpeed: 2
-  DestroyEnemyWidth: -0.4
-  DestroyEnemyWidth2: 1.4
-  DestroyEnemyHight: -0.5
-  DestroyEnemyHight2: 1.5
 --- !u!50 &6570903113125044011
 Rigidbody2D:
   serializedVersion: 5
@@ -245,3 +228,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.5}
   m_Size: {x: 0.8, y: 0.1}
   m_Direction: 1
+--- !u!114 &8594405445923285696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1776230119868192093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3af4c4ed524d8de459f7b24ae42c02a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy1
+  moveSpeed: 2
+  DestroyEnemyWidth: -0.4
+  DestroyEnemyWidth2: 1.4
+  DestroyEnemyHight: -0.5
+  DestroyEnemyHight2: 1.5
